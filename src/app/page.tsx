@@ -3,6 +3,10 @@ import Image, { StaticImageData } from 'next/image';
 import { useState } from 'react';
 import { FaInstagram, FaLinkedinIn, FaTelegram } from 'react-icons/fa';
 import {
+  ArrowButtonElement,
+  CalculatorSectionContainer,
+  CalculatorSectionHeading,
+  CalculatorSectionRegularText,
   Heading1,
   HeadingsContainer,
   Main,
@@ -32,14 +36,27 @@ import BurgerIcon from '~/images/burger';
 import BackIcon from '~/images/back';
 import nextIconSrc from '~/images/next.svg';
 import { IconType } from 'react-icons/lib';
+import { useEventListener } from 'usehooks-ts';
 
 export default function Home() {
   const [openedSection, setOpenedSection] = useState<NavigationSection>();
 
+  const [isPressingRightShift, setIsPressingRightShift] = useState(false);
+  useEventListener('keydown', (event) => {
+    if (event.code === 'ShiftRight') {
+      setIsPressingRightShift(true);
+    }
+  });
+  useEventListener('keyup', () => {
+    setIsPressingRightShift(false);
+  });
+
   return (
     <Main data-has-opened-section={!!openedSection}>
       <HeadingsContainer data-has-opened-section={!!openedSection}>
-        <Heading1>right.shift</Heading1>
+        <Heading1 style={{ transform: isPressingRightShift ? 'scale(0.7)' : undefined }}>
+          right.shift
+        </Heading1>
         <Subheading>
           digital products tailored <SubheadingSpan>for you</SubheadingSpan>
         </Subheading>
@@ -63,9 +80,27 @@ function NavigationMenuComponent({
   /** wasJustClosed is designed to prevent the :hover effects from actuating if the user clicks the close button without moving the cursor in Safari. */
   const [wasJustClosed, setWasJustClosed] = useState(false);
 
+  useEventListener('keydown', (event) => {
+    const code = event.code;
+    if (code === 'Space' || code === 'Enter') {
+      if (!openedSection) {
+        setIsMenuOpened(true);
+      }
+      return;
+    }
+    if (code === 'Escape') {
+      setOpenedSection(undefined);
+      if (!openedSection) {
+        setIsMenuOpened(false);
+        setWasJustClosed(true);
+      }
+    }
+  });
+
   return (
     <NavigationMenuComponentContainer
       workOpened={openedSection === 'work'}
+      calcOpened={openedSection === 'calc'}
       isMenuOpened={isMenuOpened}
       data-is-opened={isMenuOpened}
       data-was-just-closed={wasJustClosed}
@@ -85,6 +120,17 @@ function NavigationMenuComponent({
         aria-controls={navigationMenuId}
         aria-expanded={isMenuOpened}
         data-has-opened-section={!!openedSection}
+        onClick={() => {
+          setOpenedSection(undefined);
+          if (!openedSection) {
+            setIsMenuOpened((prev) => {
+              if (prev) {
+                setWasJustClosed(true);
+              }
+              return !prev;
+            });
+          }
+        }}
       >
         <svg
           width="50"
@@ -92,17 +138,6 @@ function NavigationMenuComponent({
           viewBox="0 0 50 50"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          onClick={() => {
-            setOpenedSection(undefined);
-            if (!openedSection) {
-              setIsMenuOpened((prev) => {
-                if (prev) {
-                  setWasJustClosed(true);
-                }
-                return !prev;
-              });
-            }
-          }}
           aria-hidden
         >
           <circle cx="25" cy="25" r="24.25" stroke="#fff" strokeWidth="1.5" />
@@ -147,7 +182,11 @@ function NavigationMenu({
         setIsMenuOpened(true);
       }}
     >
-      <NavigationMenuContainer workOpened={openedSection === 'work'} id={navigationMenuId}>
+      <NavigationMenuContainer
+        workOpened={openedSection === 'work'}
+        calcOpened={openedSection === 'calc'}
+        id={navigationMenuId}
+      >
         {!openedSection && (
           <>
             <NavigationMenuNav>
@@ -160,7 +199,15 @@ function NavigationMenu({
               >
                 our work
               </Link>
-              <Link href="/calc">calculate price</Link>
+              <Link
+                href="/calc"
+                onClick={(event) => {
+                  event.preventDefault();
+                  setOpenedSection('calc');
+                }}
+              >
+                calculate price
+              </Link>
               <Link href="/contact">contact us</Link>
               <Link href="/about">about us</Link>
             </NavigationMenuNav>
@@ -184,6 +231,7 @@ function NavigationMenu({
           </>
         )}
         {openedSection === 'work' && <WorkSection />}
+        {openedSection === 'calc' && <CalculatorSection />}
       </NavigationMenuContainer>
     </NavigationMenuOuterContainer>
   );
@@ -221,5 +269,113 @@ function WorkSection() {
         </WorkSectionImageContainer>
       ))}
     </WorkSectionContainer>
+  );
+}
+
+function CalculatorSection() {
+  const [stage, setStage] = useState(0);
+
+  function nextStage() {
+    setStage((prev) => prev + 1);
+  }
+
+  return (
+    <CalculatorSectionContainer>
+      {stage === 0 && (
+        <>
+          {' '}
+          <CalculatorSectionRegularText>
+            {"Hey, we're the"} <span>right.shift</span>{' '}
+            {`team. We've created a project cost calculator just for you. Give it a try to get an idea of the cost approximation for your project. If you'd like an accurate estimate, please provide your contact details at the end of the cost calculation, and we'll send you a precise quote in no time. We appreciate your trust in us!`}
+          </CalculatorSectionRegularText>
+          <ArrowButton onClick={nextStage}>{"Let's get started"}</ArrowButton>
+        </>
+      )}
+      {stage === 1 && (
+        <>
+          <CalculatorSectionHeading>What do you need to develop?</CalculatorSectionHeading>
+          <ArrowButton onClick={nextStage}>Landing page</ArrowButton>
+          <ArrowButton onClick={nextStage}>Website CMS</ArrowButton>
+          <ArrowButton onClick={nextStage}>Application</ArrowButton>
+        </>
+      )}
+      {stage === 2 && (
+        <>
+          <CalculatorSectionHeading>What about design?</CalculatorSectionHeading>
+          <ArrowButton onClick={nextStage}>Basic</ArrowButton>
+          <ArrowButton onClick={nextStage}>Standard</ArrowButton>
+          <ArrowButton onClick={nextStage}>Advanced</ArrowButton>
+        </>
+      )}
+      {stage === 3 && (
+        <>
+          <CalculatorSectionHeading>
+            Do you need integration with third-party services / API?
+          </CalculatorSectionHeading>
+          Yes No
+        </>
+      )}
+      {stage === 4 && (
+        <>
+          <CalculatorSectionHeading>
+            Do you have media materials? (photos, videos, illustrations, infographics, etc.)
+          </CalculatorSectionHeading>
+          Yes No
+        </>
+      )}
+      {stage === 4 && (
+        <>
+          <CalculatorSectionHeading>Select the desired options</CalculatorSectionHeading>
+          <>A list of options...</>
+        </>
+      )}
+    </CalculatorSectionContainer>
+  );
+}
+
+function ArrowButton({ children, ...props }: JSX.IntrinsicElements['button']) {
+  return (
+    <ArrowButtonElement type="button" {...props}>
+      {children}
+      <ArrowRightIcon />
+    </ArrowButtonElement>
+  );
+}
+
+function ArrowRightIcon() {
+  const stroke = '#1e1e1e';
+  const strokeWidth = 1.9;
+
+  const width = 34;
+  const height = 16;
+  const x2 = width - 1;
+  const y2 = height / 2;
+
+  const flipperSize = 6.5;
+  const flippersX1 = x2 - flipperSize;
+  const upperFlipperY1 = y2 - flipperSize;
+  const lowerFlipperY1 = y2 + flipperSize;
+
+  const sharedLineProps: JSX.IntrinsicElements['line'] = {
+    stroke,
+    strokeWidth,
+    strokeLinecap: 'round',
+    x2,
+    y2,
+  };
+
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox={`0 0 ${width} ${height}`}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      style={{ marginLeft: 15 }}
+    >
+      <line x1={0} y1={y2} {...sharedLineProps} />
+      <line x1={flippersX1} y1={upperFlipperY1} {...sharedLineProps} />
+      <line x1={flippersX1} y1={lowerFlipperY1} {...sharedLineProps} />
+    </svg>
   );
 }

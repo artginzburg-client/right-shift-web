@@ -35,6 +35,8 @@ export const Heading1 = styled.h1`
   font-style: normal;
   font-weight: 700;
   /* line-height: 0px; 0% */
+
+  transition: transform 0.2s ${easings.easeOutBack};
 `;
 
 export const Subheading = styled.p`
@@ -129,7 +131,7 @@ const navigationMenuContainerHeight = 500;
 
 const mavigationMenuContainerBorderRadius = 20;
 
-export const NavigationMenuContainer = styled.div<{ workOpened: boolean }>`
+export const NavigationMenuContainer = styled.div<{ workOpened: boolean; calcOpened: boolean }>`
   background: #fff;
   border-radius: ${mavigationMenuContainerBorderRadius}px;
 
@@ -142,14 +144,14 @@ export const NavigationMenuContainer = styled.div<{ workOpened: boolean }>`
   margin-right: 65px;
 
   box-sizing: border-box;
-  padding: ${(props) => (props.workOpened ? '5px' : '50px 40px')};
+  padding: ${(props) => (props.calcOpened ? '50px' : props.workOpened ? '5px' : '50px 40px')};
 
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 
   width: ${(props) =>
-    props.workOpened
+    props.workOpened || props.calcOpened
       ? `${navigationMenuContainerWidthInWorkSection}px`
       : `${navigationMenuContainerWidth}px`};
   height: ${(props) => (props.workOpened ? 'auto' : `${navigationMenuContainerHeight}px`)};
@@ -157,6 +159,7 @@ export const NavigationMenuContainer = styled.div<{ workOpened: boolean }>`
 
 export const NavigationMenuComponentContainer = styled.div<{
   workOpened: boolean;
+  calcOpened: boolean;
   isMenuOpened: boolean;
 }>`
   display: flex;
@@ -184,7 +187,7 @@ export const NavigationMenuComponentContainer = styled.div<{
     transform: translateX(
       ${(props) =>
         `${
-          -(props.workOpened
+          -(props.workOpened || props.calcOpened
             ? navigationMenuContainerWidthInWorkSection
             : navigationMenuContainerWidth) - 65
         }px`}
@@ -288,6 +291,37 @@ export const NavigationMenuNav = styled.nav`
     /* line-height: 0px; 0% */
     letter-spacing: 0.56px;
     text-decoration-line: underline;
+
+    position: relative;
+    &::before {
+      content: '';
+      position: absolute;
+      left: -22px;
+      top: calc(50% + 2px);
+      transform: translateY(-50%) scale(0);
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 5px solid black;
+      box-sizing: border-box;
+
+      transition: 0.3s ease-in-out;
+      transition-property: transform, border;
+    }
+
+    &:hover {
+      &::before {
+        transform: translateY(-50%) scale(0.5);
+      }
+    }
+
+    &:active {
+      &::before {
+        transition-duration: 0.1s;
+        transform: translateY(-50%) scale(1);
+        border: 1px solid black;
+      }
+    }
   }
 `;
 
@@ -403,4 +437,83 @@ export const WorkSectionImage = styled(Image)`
   object-fit: cover;
 
   border-radius: inherit;
+`;
+
+export const CalculatorSectionContainer = styled.div`
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const CalculatorSectionRegularText = styled.p`
+  margin: 0;
+
+  leading-trim: both;
+  text-edge: cap;
+  /* font-family: GT Eesti Pro Display; */
+  font-size: 28px;
+  /* font-style: normal; */
+  /* font-weight: 400; */
+  line-height: 120%; /* 33.6px */
+
+  > span {
+    font-weight: 700;
+  }
+`;
+
+export const ArrowButtonElement = styled.button`
+  ${reset.button}
+  cursor: pointer;
+
+  padding: 9px 12px;
+  border-radius: 20px;
+  border: 2px solid transparent;
+
+  min-width: 230px;
+
+  color: #000;
+  leading-trim: both;
+  text-edge: cap;
+  /* font-family: GT Eesti Pro Display; */
+  font-size: 24px;
+  /* font-style: normal; */
+  /* font-weight: 400; */
+  /* line-height: 0px; 0% */
+  line-height: 58%;
+  /* box-sizing: border-box; */
+
+  > svg > line:nth-of-type(1) {
+    transform: scaleX(0.5);
+    transform-origin: right;
+
+    transition: transform 0.5s ${easings.easeOutBack};
+  }
+
+  transition: border-color 0.5s ease-in-out;
+
+  &:hover {
+    border-color: #1e1e1e;
+
+    > svg > line:nth-of-type(1) {
+      transform: none;
+    }
+  }
+`;
+
+export const CalculatorSectionHeading = styled.h2`
+  margin: 0;
+  padding: 0;
+
+  color: #000;
+  /* text-align: right; */
+  leading-trim: both;
+  text-edge: cap;
+  /* font-family: GT Eesti Pro Display; */
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 400;
+  /* line-height: 70%; */ // one-line
+  line-height: 120%; /* 43.2px */ // multi-line
 `;
