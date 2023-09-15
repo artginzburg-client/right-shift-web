@@ -4,7 +4,7 @@ import localFont from 'next/font/local';
 const gTEestiProDisplay = localFont({
   src: [
     {
-      path: '../fonts/gt-eesti-pro-display/GT-Eesti-Display-UltraBold.otf',
+      path: '../fonts/gt-eesti-pro-display/GT-Eesti-Display-Bold.otf',
       weight: '700',
     },
     {
