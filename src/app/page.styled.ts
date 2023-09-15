@@ -46,7 +46,7 @@ export const Heading1 = styled.h1`
   transition: transform 0.2s ${easings.easeOutBack};
 
   ${media.mobileStyle} {
-    font-size: 65px;
+    font-size: 69px;
   }
 `;
 
@@ -65,7 +65,7 @@ export const Subheading = styled.p`
   letter-spacing: 0.72px;
 
   ${media.mobileStyle} {
-    font-size: 17px;
+    font-size: 18px;
   }
 `;
 
