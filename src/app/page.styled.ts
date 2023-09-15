@@ -457,7 +457,20 @@ export const WorkSectionImageContainer = styled(Link)`
     transition: background-color 0.4s ease-in-out;
   }
 
-  &:hover {
+  /* WARNING duplicated code due to 'linaria' limitations. Keep in sync! */
+  ${media.hoverNonTouch} {
+    &:hover {
+      &::after {
+        background-color: rgba(0, 0, 0, 0.7);
+      }
+
+      ${WorkSectionNextIcon} {
+        /* opacity: 1; */
+        transform: ${workSectionNextIconBaseTransform} scale(1);
+      }
+    }
+  }
+  &:active {
     &::after {
       background-color: rgba(0, 0, 0, 0.7);
     }
