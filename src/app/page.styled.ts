@@ -3,6 +3,7 @@ import { styled } from '@linaria/react';
 import { reset, resetExtra } from './utils/reset';
 import Image from 'next/image';
 import Link from 'next/link';
+import { media } from './utils/media-queries';
 
 const easings = {
   /** Overshoots */
@@ -10,7 +11,7 @@ const easings = {
 };
 
 export const Main = styled.main`
-  min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   align-items: flex-end;
   justify-content: flex-start;
@@ -20,6 +21,12 @@ export const Main = styled.main`
   transition: background-color 0.45s ease-in-out;
   &[data-has-opened-section='true'] {
     background-color: rgba(0, 0, 0, 0.3);
+  }
+
+  ${media.mobileStyle} {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
   }
 `;
 
@@ -37,6 +44,10 @@ export const Heading1 = styled.h1`
   /* line-height: 0px; 0% */
 
   transition: transform 0.2s ${easings.easeOutBack};
+
+  ${media.mobileStyle} {
+    font-size: 65px;
+  }
 `;
 
 export const Subheading = styled.p`
@@ -52,6 +63,10 @@ export const Subheading = styled.p`
   font-weight: 300;
   /* line-height: 0px; 0% */
   letter-spacing: 0.72px;
+
+  ${media.mobileStyle} {
+    font-size: 17px;
+  }
 `;
 
 export const HeadingsContainer = styled.div`
@@ -75,6 +90,11 @@ export const HeadingsContainer = styled.div`
     filter: blur(10px);
 
     color: rgba(255, 255, 255, 0.7);
+  }
+
+  ${media.mobileStyle} {
+    padding: 10px;
+    margin-top: 40px;
   }
 `;
 
@@ -121,6 +141,13 @@ export const SubheadingSpan = styled.span`
 export const NavigationMenuOuterContainer = styled.div`
   position: absolute;
   left: 100%;
+
+  ${media.mobileStyle} {
+    top: 100%;
+    left: unset;
+    right: -50%;
+    transform: translateX(calc(50% - 17px));
+  }
 `;
 
 const navigationMenuContainerWidth = 350;
@@ -155,6 +182,10 @@ export const NavigationMenuContainer = styled.div<{ workOpened: boolean; calcOpe
       ? `${navigationMenuContainerWidthInWorkSection}px`
       : `${navigationMenuContainerWidth}px`};
   height: ${(props) => (props.workOpened ? 'auto' : `${navigationMenuContainerHeight}px`)};
+
+  max-width: 100vw;
+  max-height: calc(100svh - 130px);
+  overflow: auto;
 `;
 
 export const NavigationMenuComponentContainer = styled.div<{
@@ -181,6 +212,10 @@ export const NavigationMenuComponentContainer = styled.div<{
     > button {
       transform: rotate(-45deg);
     }
+
+    ${media.mobileStyle} {
+      transform: translateY(${-65}px);
+    }
   }
 
   &[data-is-opened='true'] {
@@ -192,12 +227,23 @@ export const NavigationMenuComponentContainer = styled.div<{
             : navigationMenuContainerWidth) - 65
         }px`}
     );
+
+    ${media.mobileStyle} {
+      transform: translateY(calc(-100svh + 125px));
+    }
   }
 
   > button {
     cursor: pointer;
 
     transition: transform 0.5s ease-in-out;
+  }
+
+  ${media.mobileStyle} {
+    margin-left: 0;
+    margin-top: auto;
+    padding-right: 0;
+    padding-bottom: 65px;
   }
 `;
 
@@ -377,6 +423,11 @@ export const WorkSectionContainer = styled.div`
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
   gap: 5px;
+
+  ${media.mobileStyle} {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+  }
 `;
 
 const workSectionNextIconBaseTransform = 'translate(-50%, -50%)';
@@ -419,15 +470,27 @@ export const WorkSectionImageContainer = styled(Link)`
 
   &:nth-child(1) {
     border-top-left-radius: ${mavigationMenuContainerBorderRadius}px;
+    ${media.mobileStyle} {
+      border-top-right-radius: ${mavigationMenuContainerBorderRadius}px;
+    }
   }
   &:nth-child(2) {
     border-top-right-radius: ${mavigationMenuContainerBorderRadius}px;
+    ${media.mobileStyle} {
+      border-top-right-radius: 0;
+    }
   }
   &:nth-last-child(1) {
     border-bottom-right-radius: ${mavigationMenuContainerBorderRadius}px;
+    ${media.mobileStyle} {
+      border-bottom-left-radius: ${mavigationMenuContainerBorderRadius}px;
+    }
   }
   &:nth-last-child(2) {
     border-bottom-left-radius: ${mavigationMenuContainerBorderRadius}px;
+    ${media.mobileStyle} {
+      border-bottom-left-radius: 0;
+    }
   }
 `;
 export const WorkSectionImage = styled(Image)`

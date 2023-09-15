@@ -1,4 +1,4 @@
-const mobileBreakpointPx = 700
+const mobileBreakpointPx = 834;
 
 export const media = {
   /** Enable hover only on non-touch devices */
@@ -10,5 +10,5 @@ export const media = {
   tabletAndSmallerDesktopStyle: `@media (min-width: ${
     mobileBreakpointPx + 1
   }px) and (max-width: 1120px)`,
-  prefersColorSchemeDark: `@media (prefers-color-scheme: dark)`
-}
+  prefersColorSchemeDark: `@media (prefers-color-scheme: dark)`,
+} as const;
