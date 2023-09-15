@@ -18,6 +18,7 @@ import {
   NavigationMenuOuterContainer,
   NavigationMenuPrimaryButton,
   NavigationMenuSocialList,
+  RotatingWordsInSubheadingContainer,
   Subheading,
   SubheadingSpan,
   WorkSectionContainer,
@@ -58,11 +59,23 @@ export default function Home() {
           right.shift
         </Heading1>
         <Subheading>
-          digital products tailored <SubheadingSpan>for you</SubheadingSpan>
+          digital products <RotatingWordInSubheading /> <SubheadingSpan>for you</SubheadingSpan>
         </Subheading>
       </HeadingsContainer>
       <NavigationMenuComponent openedSection={openedSection} setOpenedSection={setOpenedSection} />
     </Main>
+  );
+}
+
+function RotatingWordInSubheading() {
+  const words = ['tailored', 'crafted', 'tuned'];
+
+  return (
+    <RotatingWordsInSubheadingContainer>
+      {words.map((word) => (
+        <span key={word}>{word}</span>
+      ))}
+    </RotatingWordsInSubheadingContainer>
   );
 }
 
