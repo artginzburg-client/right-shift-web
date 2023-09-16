@@ -568,6 +568,8 @@ export const WorkSectionImage = styled(Image)`
   object-fit: cover;
 
   border-radius: inherit;
+
+  background-color: #1e1e1e; /* This color shows while the image is loading. */
 `;
 
 export const CalculatorSectionContainer = styled.div`
