@@ -193,7 +193,7 @@ export const NavigationMenuOuterContainer = styled.div`
     top: 100%;
     left: unset;
     right: -50%;
-    transform: translateX(calc(50% - 17px));
+    transform: translateX(calc(50% - 17.5px));
   }
 `;
 
@@ -204,6 +204,10 @@ const navigationMenuContainerHeight = 500;
 // const navigationMenuContainerHeightInWorkSection = 373;
 
 const mavigationMenuContainerBorderRadius = 20;
+
+const mobileMenuOpenedTopOffset = 135;
+const mobileMenuOpenedBottomShift = 5;
+const mobileMenuOpenedPrimaryButtonTopOffset = 10;
 
 export const NavigationMenuContainer = styled.div<{ workOpened: boolean; calcOpened: boolean }>`
   background: #fff;
@@ -232,7 +236,7 @@ export const NavigationMenuContainer = styled.div<{ workOpened: boolean; calcOpe
     props.workOpened || props.calcOpened ? 'auto' : `${navigationMenuContainerHeight}px`};
 
   max-width: 100vw;
-  max-height: calc(100svh - 130px);
+  max-height: calc(100svh - ${mobileMenuOpenedTopOffset}px);
   overflow: auto;
 `;
 
@@ -277,7 +281,9 @@ export const NavigationMenuComponentContainer = styled.div<{
     );
 
     ${media.mobileStyle} {
-      transform: translateY(calc(-100svh + 125px));
+      transform: translateY(
+        calc(-100svh + ${mobileMenuOpenedTopOffset - mobileMenuOpenedBottomShift}px)
+      );
     }
   }
 
@@ -291,7 +297,7 @@ export const NavigationMenuComponentContainer = styled.div<{
     margin-left: 0;
     margin-top: auto;
     padding-right: 0;
-    padding-bottom: 65px;
+    padding-bottom: ${65 - mobileMenuOpenedBottomShift + mobileMenuOpenedPrimaryButtonTopOffset}px;
   }
 `;
 
