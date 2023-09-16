@@ -9,6 +9,8 @@ import {
   CalculatorSectionDesiredOptionLabel,
   CalculatorSectionDesiredOptions,
   CalculatorSectionHeading,
+  CalculatorSectionInput,
+  CalculatorSectionInputSendButton,
   CalculatorSectionRegularText,
   CircleButtonElement,
   CircleButtonsContainer,
@@ -315,6 +317,7 @@ function WorkSection() {
   );
 }
 
+/** @todo don't rerender on send — or in simple words, just don't clear the email in case the request fails and the user has to send again. */
 function CalculatorSection() {
   const [stage, setStage] = useState(0);
   function nextStage() {
@@ -324,6 +327,24 @@ function CalculatorSection() {
   const [answers, setAnswers] = useState<(string | boolean | string[])[]>([]);
   function addAnswer(answer: (typeof answers)[number]) {
     setAnswers((prev) => [...prev, answer]);
+  }
+
+  const [isSendingAnswers, setIsSendingAnswers] = useState(false);
+  async function sendAnswers(email: string) {
+    setIsSendingAnswers(true);
+
+    // console.log(answers, email);
+
+    const shouldFakePromise = true;
+
+    return shouldFakePromise
+      ? new Promise((resolve, reject) => {
+          setTimeout(() => {
+            setIsSendingAnswers(false);
+            resolve(true);
+          }, 4000);
+        })
+      : undefined;
   }
 
   const possibleDesiredOptions = [
@@ -386,46 +407,39 @@ function CalculatorSection() {
     },
   };
 
-  return (
-    <CalculatorSectionContainer>
-      {stage === 0 && (
-        <>
-          <CalculatorSectionRegularText>
-            {"Hey, we're the"} <span>right.shift</span>{' '}
-            {`team. We've created a project cost calculator just for you. Give it a try to get an idea of the cost approximation for your project. If you'd like an accurate estimate, please provide your contact details at the end of the cost calculation, and we'll send you a precise quote in no time. We appreciate your trust in us!`}
-          </CalculatorSectionRegularText>
-          <ArrowButton onClick={nextStage}>{"Let's get started"}</ArrowButton>
-        </>
-      )}
-      {stage === 1 && (
-        <>
-          <CalculatorSectionHeading>What do you need to develop?</CalculatorSectionHeading>
-          {generateAnswers.string(['Landing page', 'Website CMS', 'Application'])}
-        </>
-      )}
-      {stage === 2 && (
-        <>
-          <CalculatorSectionHeading>What about design?</CalculatorSectionHeading>
-          {generateAnswers.string(['Basic', 'Standard', 'Advanced'])}
-        </>
-      )}
-      {stage === 3 && (
-        <>
-          <CalculatorSectionHeading>
-            Do you need integration with third-party services / API?
-          </CalculatorSectionHeading>
-          {generateAnswers.boolean()}
-        </>
-      )}
-      {stage === 4 && (
-        <>
-          <CalculatorSectionHeading>
-            Do you have media materials? (photos, videos, illustrations, infographics, etc.)
-          </CalculatorSectionHeading>
-          {generateAnswers.boolean()}
-        </>
-      )}
-      {stage === 5 && (
+  const stages: React.FC[] = [
+    () => (
+      <>
+        <CalculatorSectionRegularText>
+          {"Hey, we're the"} <span>right.shift</span>{' '}
+          {`team. We've created a project cost calculator just for you. Give it a try to get an idea of the cost approximation for your project. If you'd like an accurate estimate, please provide your contact details at the end of the cost calculation, and we'll send you a precise quote in no time. We appreciate your trust in us!`}
+        </CalculatorSectionRegularText>
+        <ArrowButton onClick={nextStage}>{"Let's get started"}</ArrowButton>
+      </>
+    ),
+    () => (
+      <>
+        <CalculatorSectionHeading>What do you need to develop?</CalculatorSectionHeading>
+        {generateAnswers.string(['Landing page', 'Website CMS', 'Application'])}
+      </>
+    ),
+    () => (
+      <>
+        <CalculatorSectionHeading>What about design?</CalculatorSectionHeading>
+        {generateAnswers.string(['Basic', 'Standard', 'Advanced'])}
+      </>
+    ),
+    () => (
+      <>
+        <CalculatorSectionHeading>
+          Do you need integration with third-party services / API?
+        </CalculatorSectionHeading>
+        {generateAnswers.boolean()}
+      </>
+    ),
+    () => {
+      const optionName = 'desired-option';
+      return (
         <>
           <CalculatorSectionHeading>Select the desired options</CalculatorSectionHeading>
           <form
@@ -433,7 +447,7 @@ function CalculatorSection() {
             onSubmit={(event) => {
               event.preventDefault();
               const formData = new FormData(event.currentTarget);
-              const selectedOptions = formData.getAll('desired-option') as string[];
+              const selectedOptions = formData.getAll(optionName) as string[];
               addAnswer(selectedOptions);
               nextStage();
             }}
@@ -443,7 +457,7 @@ function CalculatorSection() {
                 <CalculatorSectionDesiredOptionLabel key={option}>
                   <CalculatorSectionDesiredOptionCheckbox
                     type="checkbox"
-                    name="desired-option"
+                    name={optionName}
                     value={option}
                   />
                   {option}
@@ -453,7 +467,57 @@ function CalculatorSection() {
             <ArrowButton type="submit">Calculate</ArrowButton>
           </form>
         </>
-      )}
+      );
+    },
+    () => (
+      <>
+        <CalculatorSectionHeading>{`The e-mail to reach out to`}</CalculatorSectionHeading>
+        <CalculatorSectionRegularText>
+          {`We're human, we don't spam :)`}
+        </CalculatorSectionRegularText>
+        <form
+          style={{ display: 'contents' }}
+          onSubmit={async (event) => {
+            event.preventDefault();
+            const formData = new FormData(event.currentTarget);
+            const email = formData.get('email') as string;
+            await sendAnswers(email);
+            nextStage();
+          }}
+        >
+          <label style={{ width: '100%' }}>
+            <CalculatorSectionInput
+              disabled={isSendingAnswers}
+              type="email"
+              name="email"
+              placeholder="Your e-mail"
+              required
+              autoFocus
+            />
+            <CalculatorSectionInputSendButton
+              disabled={isSendingAnswers}
+              type="submit"
+              className={isSendingAnswers ? 'submitting' : undefined}
+            >
+              <ArrowRightIcon />
+            </CalculatorSectionInputSendButton>
+          </label>
+        </form>
+      </>
+    ),
+    () => (
+      <>
+        <CalculatorSectionHeading>{`Thanks!`}</CalculatorSectionHeading>
+        <CalculatorSectionRegularText>{`We'll be in touch`}</CalculatorSectionRegularText>
+      </>
+    ),
+  ];
+
+  const CurrentStage = stages[stage];
+
+  return (
+    <CalculatorSectionContainer style={{ cursor: isSendingAnswers ? 'wait' : undefined }}>
+      <CurrentStage />
     </CalculatorSectionContainer>
   );
 }
@@ -462,12 +526,12 @@ function ArrowButton({ children, ...props }: JSX.IntrinsicElements['button']) {
   return (
     <ArrowButtonElement type="button" {...props}>
       {children}
-      <ArrowRightIcon />
+      <ArrowRightIcon style={{ marginLeft: 15 }} />
     </ArrowButtonElement>
   );
 }
 
-function ArrowRightIcon() {
+function ArrowRightIcon(props: JSX.IntrinsicElements['svg']) {
   const stroke = '#1e1e1e';
   const strokeWidth = 1.9;
 
@@ -496,7 +560,7 @@ function ArrowRightIcon() {
       viewBox={`0 0 ${width} ${height}`}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      style={{ marginLeft: 15 }}
+      {...props}
     >
       <line x1={0} y1={y2} {...sharedLineProps} />
       <line x1={flippersX1} y1={upperFlipperY1} {...sharedLineProps} />

@@ -4,6 +4,7 @@ import { reset, resetExtra } from './utils/reset';
 import Image from 'next/image';
 import Link from 'next/link';
 import { media } from './utils/media-queries';
+import { colors } from './config/colors';
 
 const easings = {
   /** Overshoots */
@@ -170,13 +171,7 @@ export const SubheadingSpan = styled.span`
     z-index: -1;
 
     background: rgb(255, 0, 0);
-    background: linear-gradient(
-      ${0.25 + 0.08}turn,
-      rgba(255, 0, 0, 1),
-      rgba(201, 193, 0, 1),
-      rgba(0, 255, 240, 1),
-      rgba(5, 0, 255, 1)
-    );
+    background: ${colors.rainbow};
   }
   &::after {
     content: '';
@@ -749,5 +744,105 @@ export const CalculatorSectionDesiredOptionCheckbox = styled.input`
   transition: background-color 0.3s ease-out;
   &:checked {
     background-color: #1e1e1e;
+  }
+`;
+
+const calculatorSectionInputSendButtonSize = 70;
+export const CalculatorSectionInput = styled.input`
+  all: unset;
+  cursor: auto;
+
+  font-size: 20px;
+  padding-right: 3px;
+  width: calc(98% - ${calculatorSectionInputSendButtonSize}px);
+
+  &:valid + button,
+  &:disabled + button {
+    &::before {
+      transform: scale(1);
+    }
+    &::after {
+      border-color: transparent;
+      transform: scale(0.82);
+    }
+
+    transition: box-shadow 0.5s ${easings.easeOutBack};
+    ${media.hoverNonTouch} {
+      &:hover:not(:disabled) {
+        box-shadow: 0 0 20px 0 #0005;
+      }
+    }
+    &:focus:not(:disabled) {
+      box-shadow: 0 0 20px 0 #0005;
+    }
+  }
+  &:invalid + button {
+    cursor: not-allowed;
+  }
+
+  &:disabled {
+    cursor: wait;
+  }
+
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 60px #fff inset !important;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+`;
+const calculatorSectionInputSendButtonSuccessOutlineSizePercents = 1;
+export const CalculatorSectionInputSendButton = styled.button`
+  ${reset.button}
+  cursor: pointer;
+
+  border-radius: 50%;
+  aspect-ratio: 1;
+  width: ${calculatorSectionInputSendButtonSize}px;
+
+  z-index: 0;
+  position: relative;
+  &::before {
+    content: '';
+    position: absolute;
+    top: -${calculatorSectionInputSendButtonSuccessOutlineSizePercents}%;
+    left: -${calculatorSectionInputSendButtonSuccessOutlineSizePercents}%;
+    z-index: -1;
+    width: ${100 + calculatorSectionInputSendButtonSuccessOutlineSizePercents * 2}%;
+    height: ${100 + calculatorSectionInputSendButtonSuccessOutlineSizePercents * 2}%;
+    border-radius: inherit;
+
+    background: ${colors.rainbow};
+    transform: scale(0);
+    transition: transform 0.5s ${easings.easeOutBack} 0.3s;
+  }
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+
+    background: #fff;
+    border: 1px solid black;
+    box-sizing: border-box;
+    transition: 0.5s ${easings.easeOutBack} 0.3s;
+    transition-property: border-color, transform;
+  }
+
+  &:disabled {
+    cursor: wait;
+    animation: submitting-answers 0.8s ease-in-out 0.3s infinite;
+
+    @keyframes submitting-answers {
+      to {
+        transform: rotateZ(1turn);
+      }
+    }
   }
 `;
