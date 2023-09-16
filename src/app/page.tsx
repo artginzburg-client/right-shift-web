@@ -319,6 +319,11 @@ function WorkSection() {
 
 /** @todo don't rerender on send — or in simple words, just don't clear the email in case the request fails and the user has to send again. */
 function CalculatorSection() {
+  const devOnlyDebuggers = {
+    shouldFakePromise: false,
+    shouldDisplayRetryButton: false,
+  };
+
   const [stage, setStage] = useState(0);
   function nextStage() {
     setStage((prev) => prev + 1);
@@ -333,18 +338,24 @@ function CalculatorSection() {
   async function sendAnswers(email: string) {
     setIsSendingAnswers(true);
 
-    // console.log(answers, email);
+    if (devOnlyDebuggers.shouldFakePromise) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          setIsSendingAnswers(false);
+          resolve(true);
+        }, 4000);
+      });
+    }
 
-    const shouldFakePromise = true;
-
-    return shouldFakePromise
-      ? new Promise((resolve, reject) => {
-          setTimeout(() => {
-            setIsSendingAnswers(false);
-            resolve(true);
-          }, 4000);
-        })
-      : undefined;
+    const result = await fetch(`${window.location.origin}/api/calculator`, {
+      method: 'POST',
+      body: JSON.stringify({
+        email,
+        answers,
+      }),
+    });
+    setIsSendingAnswers(false);
+    return result;
   }
 
   const possibleDesiredOptions = [
@@ -509,6 +520,15 @@ function CalculatorSection() {
       <>
         <CalculatorSectionHeading>{`Thanks!`}</CalculatorSectionHeading>
         <CalculatorSectionRegularText>{`We'll be in touch`}</CalculatorSectionRegularText>
+        {devOnlyDebuggers.shouldDisplayRetryButton && (
+          <button
+            onClick={() => {
+              sendAnswers('Sent for debugging purposes');
+            }}
+          >
+            Dev-only retry
+          </button>
+        )}
       </>
     ),
   ];
