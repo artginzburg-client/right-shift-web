@@ -135,6 +135,7 @@ function NavigationMenuComponent({
     }
     if (code === 'Escape') {
       setOpenedSection(undefined);
+      window.location.hash = '';
       if (!openedSection) {
         setIsMenuOpened(false);
         setWasJustClosed(true);
