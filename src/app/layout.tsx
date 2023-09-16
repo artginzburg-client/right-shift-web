@@ -27,6 +27,10 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        {/* Does this need rel="shortcut"? The Next.js doc https://nextjs.org/docs/app/api-reference/file-conventions/metadata/app-icons#image-files-ico-jpg-png just specifies rel="icon". I just remember it was better to also put "shortcut" in there, so leaving it until I update my knowledge. */}
+        <link rel="shortcut icon" href="/favicon.ico" sizes="any" />
+      </head>
       <body className={gTEestiProDisplay.className}>{children}</body>
     </html>
   );
