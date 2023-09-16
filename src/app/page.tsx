@@ -1,5 +1,5 @@
 'use client';
-import Image, { StaticImageData } from 'next/image';
+import { StaticImageData } from 'next/image';
 import { useState } from 'react';
 import { FaInstagram, FaLinkedinIn, FaTelegram } from 'react-icons/fa';
 import {
@@ -31,7 +31,6 @@ import {
   WorkSectionImageContainer,
   WorkSectionNextIcon,
 } from './page.styled';
-// import Burger from '../images/burger.svg';
 import Link from 'next/link';
 
 import schoolMapImage from '~/images/work/school-map.png';
@@ -43,9 +42,27 @@ import BackIcon from '~/images/back';
 import nextIconSrc from '~/images/next.svg';
 import { IconType } from 'react-icons/lib';
 import { useEventListener } from 'usehooks-ts';
+import { useOnMounted } from '~/hooks/useOnMounted';
+
+const navigationSections = ['work', 'calc', 'contact', 'about'] as const;
+type NavigationSection = (typeof navigationSections)[number];
 
 export default function Home() {
   const [openedSection, setOpenedSection] = useState<NavigationSection>();
+  const [isMenuOpened, setIsMenuOpened] = useState(false);
+
+  useOnMounted(() => {
+    const hashPart = window.location.hash;
+    if (hashPart) {
+      const hash = hashPart.slice(1);
+      if (navigationSections.includes(hash as NavigationSection)) {
+        setOpenedSection(hash as NavigationSection);
+        setIsMenuOpened(true);
+      } else {
+        window.location.hash = '';
+      }
+    }
+  });
 
   const [isPressingRightShift, setIsPressingRightShift] = useState(false);
   useEventListener('keydown', (event) => {
@@ -67,7 +84,12 @@ export default function Home() {
           digital products <RotatingWordInSubheading /> <SubheadingSpan>for you</SubheadingSpan>
         </Subheading>
       </HeadingsContainer>
-      <NavigationMenuComponent openedSection={openedSection} setOpenedSection={setOpenedSection} />
+      <NavigationMenuComponent
+        openedSection={openedSection}
+        setOpenedSection={setOpenedSection}
+        isMenuOpened={isMenuOpened}
+        setIsMenuOpened={setIsMenuOpened}
+      />
     </Main>
   );
 }
@@ -85,16 +107,20 @@ function RotatingWordInSubheading() {
 }
 
 const navigationMenuId = 'primary-navigation';
-type NavigationSection = 'work' | 'calc' | 'contact' | 'about';
 
 function NavigationMenuComponent({
   openedSection,
   setOpenedSection,
+
+  isMenuOpened,
+  setIsMenuOpened,
 }: {
   openedSection: NavigationSection | undefined;
   setOpenedSection: React.Dispatch<React.SetStateAction<NavigationSection | undefined>>;
+
+  isMenuOpened: boolean;
+  setIsMenuOpened: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const [isMenuOpened, setIsMenuOpened] = useState(false);
   /** wasJustClosed is designed to prevent the :hover effects from actuating if the user clicks the close button without moving the cursor in Safari. */
   const [wasJustClosed, setWasJustClosed] = useState(false);
 
@@ -140,6 +166,7 @@ function NavigationMenuComponent({
         data-has-opened-section={!!openedSection}
         onClick={() => {
           setOpenedSection(undefined);
+          window.location.hash = '';
           if (!openedSection) {
             setIsMenuOpened((prev) => {
               if (prev) {
@@ -209,25 +236,23 @@ function NavigationMenu({
           <>
             <NavigationMenuNav>
               <Link
-                href="/work"
-                onClick={(event) => {
-                  event.preventDefault();
+                href="#work"
+                onClick={() => {
                   setOpenedSection('work');
                 }}
               >
                 our work
               </Link>
               <Link
-                href="/calc"
-                onClick={(event) => {
-                  event.preventDefault();
+                href="#calc"
+                onClick={() => {
                   setOpenedSection('calc');
                 }}
               >
                 calculate price
               </Link>
-              <Link href="/contact">contact us</Link>
-              <Link href="/about">about us</Link>
+              <Link href="#contact">contact us</Link>
+              <Link href="#about">about us</Link>
             </NavigationMenuNav>
             <NavigationMenuLinksContainer>
               <NavigationMenuContactList>
