@@ -408,7 +408,8 @@ export const NavigationMenuNav = styled.nav`
       transition-property: transform, border;
     }
 
-    &:hover {
+    &:hover,
+    &:focus {
       &::before {
         transform: translateY(-50%) scale(0.5);
       }
@@ -512,7 +513,8 @@ export const WorkSectionImageContainer = styled(Link)`
 
   /* WARNING duplicated code due to 'linaria' limitations. Keep in sync! */
   ${media.hoverNonTouch} {
-    &:hover {
+    &:hover,
+    &:focus {
       &::after {
         background-color: rgba(0, 0, 0, 0.7);
       }
