@@ -218,9 +218,9 @@ function NavigationMenu({
   const iconSizePx = 30;
 
   const socials: { href: string; Icon: IconType }[] = [
-    { href: 'instagram.com', Icon: FaInstagram },
-    { href: 'linkedin.com', Icon: FaLinkedinIn },
-    { href: 't.me', Icon: FaTelegram },
+    { href: 'www.instagram.com/art.ginzburg/', Icon: FaInstagram },
+    { href: 'www.linkedin.com/in/artginzburg/', Icon: FaLinkedinIn },
+    { href: 't.me/ginzart', Icon: FaTelegram },
   ];
 
   return (
