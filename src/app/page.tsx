@@ -334,8 +334,12 @@ function CalculatorSection() {
     setAnswers((prev) => [...prev, answer]);
   }
 
+  const [calculatedCost, setCalculatedCost] = useState<number>();
+
   const [isSendingAnswers, setIsSendingAnswers] = useState(false);
   async function sendAnswers(email: string) {
+    const newCost = approximateCost();
+    setCalculatedCost(newCost);
     setIsSendingAnswers(true);
 
     if (devOnlyDebuggers.shouldFakePromise) {
@@ -352,6 +356,7 @@ function CalculatorSection() {
       body: JSON.stringify({
         email,
         answers,
+        cost: newCost,
       }),
     });
     setIsSendingAnswers(false);
@@ -418,41 +423,38 @@ function CalculatorSection() {
     },
   };
 
-  const stages: React.FC[] = [
-    () => (
-      <>
-        <CalculatorSectionRegularText>
-          {"Hey, we're the"} <span>right.shift</span>{' '}
-          {`team. We've created a project cost calculator just for you. Give it a try to get an idea of the cost approximation for your project. If you'd like an accurate estimate, please provide your contact details at the end of the cost calculation, and we'll send you a precise quote in no time. We appreciate your trust in us!`}
-        </CalculatorSectionRegularText>
-        <ArrowButton onClick={nextStage}>{"Let's get started"}</ArrowButton>
-      </>
-    ),
-    () => (
-      <>
-        <CalculatorSectionHeading>What do you need to develop?</CalculatorSectionHeading>
-        {generateAnswers.string(['Landing page', 'Website CMS', 'Application'])}
-      </>
-    ),
-    () => (
-      <>
-        <CalculatorSectionHeading>What about design?</CalculatorSectionHeading>
-        {generateAnswers.string(['Basic', 'Standard', 'Advanced'])}
-      </>
-    ),
-    () => (
-      <>
-        <CalculatorSectionHeading>
-          Do you need integration with third-party services / API?
-        </CalculatorSectionHeading>
-        {generateAnswers.boolean()}
-      </>
-    ),
-    () => {
-      const optionName = 'desired-option';
-      return (
-        <>
-          <CalculatorSectionHeading>Select the desired options</CalculatorSectionHeading>
+  const questions: Record<
+    string,
+    {
+      type: 'string' | 'boolean' | 'stringArray';
+      title: string;
+      choice?: string[];
+      generator: (typeof generateAnswers)['boolean' | 'string'];
+    }
+  > = {
+    subject: {
+      type: 'string',
+      title: 'What do you need to develop?',
+      choice: ['Landing page', 'Website CMS', 'Application'],
+      generator: generateAnswers.string,
+    },
+    design: {
+      type: 'string',
+      title: 'What about design?',
+      choice: ['Basic', 'Standard', 'Advanced'],
+      generator: generateAnswers.string,
+    },
+    integrations: {
+      type: 'boolean',
+      title: 'Do you need integration with third-party services / API?',
+      generator: generateAnswers.boolean,
+    },
+    options: {
+      type: 'stringArray',
+      title: 'Select the desired options',
+      generator: () => {
+        const optionName = 'desired-option';
+        return (
           <form
             style={{ display: 'contents' }}
             onSubmit={(event) => {
@@ -477,9 +479,74 @@ function CalculatorSection() {
             </CalculatorSectionDesiredOptions>
             <ArrowButton type="submit">Calculate</ArrowButton>
           </form>
-        </>
-      );
+        );
+      },
     },
+  };
+
+  function approximateCost() {
+    const costOfHour = 30;
+    const hourWeights = {
+      subject: [10, 40, 100],
+      design: [10, 30, 50],
+      /** 0 = No, int = Yes */
+      integrations: 20,
+      /** Each options weight */
+      options: 2,
+    };
+
+    const answersObject = {
+      subject: answers[0],
+      design: answers[1],
+      integrations: answers[2],
+      options: answers[3],
+    };
+
+    const hourWeightOfAnswers = Object.entries(questions).map(([questionName, question]) => {
+      const questionAnswerRaw = answersObject[questionName as keyof typeof answersObject];
+      const hourWeightOfQuestion = hourWeights[questionName as keyof typeof answersObject];
+      const answerIndex = question.choice?.findIndex(
+        (choiceOption) => choiceOption === questionAnswerRaw,
+      );
+      const hourWeightOfAnswer =
+        question.type === 'boolean'
+          ? questionAnswerRaw
+            ? hourWeightOfQuestion
+            : 0
+          : question.type === 'string'
+          ? (hourWeightOfQuestion as number[])[answerIndex!]
+          : (questionAnswerRaw as string[]).length * (hourWeightOfQuestion as number);
+
+      return hourWeightOfAnswer as number;
+    });
+
+    const totalHours = hourWeightOfAnswers.reduce((prev, cur) => prev + cur, 0);
+    const totalCost = costOfHour * totalHours;
+
+    return totalCost;
+  }
+
+  const stages: React.FC[] = [
+    () => (
+      <>
+        <CalculatorSectionRegularText>
+          {"Hey, we're the"} <span>right.shift</span>{' '}
+          {`team. We've created a project cost calculator just for you. Give it a try to get an idea of the cost approximation for your project. If you'd like an accurate estimate, please provide your contact details at the end of the cost calculation, and we'll send you a precise quote in no time. We appreciate your trust in us!`}
+        </CalculatorSectionRegularText>
+        <ArrowButton onClick={nextStage}>{"Let's get started"}</ArrowButton>
+      </>
+    ),
+    ...Object.values(questions).map(
+      (question) =>
+        function QuestionComponent() {
+          return (
+            <>
+              <CalculatorSectionHeading>{question.title}</CalculatorSectionHeading>
+              {question.generator(question.choice!)}
+            </>
+          );
+        },
+    ),
     () => (
       <>
         <CalculatorSectionHeading>{`The e-mail to reach out to`}</CalculatorSectionHeading>
@@ -519,6 +586,9 @@ function CalculatorSection() {
     () => (
       <>
         <CalculatorSectionHeading>{`Thanks!`}</CalculatorSectionHeading>
+        <CalculatorSectionRegularText>
+          The estimated cost of your project is ${calculatedCost}
+        </CalculatorSectionRegularText>
         <CalculatorSectionRegularText>{`We'll be in touch`}</CalculatorSectionRegularText>
         {devOnlyDebuggers.shouldDisplayRetryButton && (
           <button

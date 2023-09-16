@@ -1,8 +1,10 @@
-const { TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID } = process.env;
+const { TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, NODE_ENV } = process.env;
+const isDevMode = NODE_ENV === 'development';
 
 type ExpectedBody = {
   email: string;
   answers: (string | boolean | string[])[];
+  cost: number;
 };
 
 export async function POST(request: Request) {
@@ -24,14 +26,16 @@ export async function POST(request: Request) {
     ${Object.entries(answersAsObject)
       .map(([heading, value]) => `*${heading}* ${value}`)
       .join('\n')}
-·
-*E-mail* \`${jsonData.email}\`
+
+*Cost* · \`$${jsonData.cost}\`
+*E-mail* · \`${jsonData.email}\`${isDevMode ? '\n_Sent from Dev Mode_' : ''}
   `);
 
   const sendResult = await telegramSendMessage({
     chat_id: TELEGRAM_CHAT_ID,
     parse_mode: 'MarkdownV2',
     text: markdownMessage,
+    disable_notification: isDevMode,
   });
 
   const sendResultJson = await sendResult.json();
@@ -54,6 +58,8 @@ function validateJsonData(jsonData: any): jsonData is ExpectedBody {
   )
     return false;
 
+  if (!jsonData.cost) return false;
+
   return true;
 }
 
@@ -62,6 +68,8 @@ function telegramSendMessage(data: {
   text: string;
   /** @see https://core.telegram.org/bots/api#formatting-options */
   parse_mode: 'MarkdownV2' | 'HTML';
+  /** Sends the message silently. Users will receive a notification with no sound. */
+  disable_notification?: boolean;
 }) {
   const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
 
