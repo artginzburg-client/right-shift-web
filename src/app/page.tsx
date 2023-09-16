@@ -282,7 +282,7 @@ function WorkSection() {
     <WorkSectionContainer>
       {works.map(({ imgSrc, aHref, title }) => (
         <WorkSectionImageContainer key={title} href={aHref} target="_blank" rel="noreferrer">
-          <WorkSectionImage src={imgSrc} alt={title} />
+          <WorkSectionImage src={imgSrc} alt={title} loading="lazy" />
           <WorkSectionNextIcon src={nextIconSrc} alt="Next" />
         </WorkSectionImageContainer>
       ))}
