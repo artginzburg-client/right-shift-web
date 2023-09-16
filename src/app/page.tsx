@@ -317,9 +317,13 @@ function WorkSection() {
 
 function CalculatorSection() {
   const [stage, setStage] = useState(0);
-
   function nextStage() {
     setStage((prev) => prev + 1);
+  }
+
+  const [answers, setAnswers] = useState<(string | boolean | string[])[]>([]);
+  function addAnswer(answer: (typeof answers)[number]) {
+    setAnswers((prev) => [...prev, answer]);
   }
 
   const possibleDesiredOptions = [
@@ -344,11 +348,48 @@ function CalculatorSection() {
     'Photo Gallery',
   ];
 
+  const generateAnswers = {
+    string(possibleAnswers: string[]) {
+      return possibleAnswers.map((possibleAnswer) => (
+        <ArrowButton
+          key={possibleAnswer}
+          onClick={() => {
+            addAnswer(possibleAnswer);
+            nextStage();
+          }}
+        >
+          {possibleAnswer}
+        </ArrowButton>
+      ));
+    },
+    boolean() {
+      return (
+        <CircleButtonsContainer>
+          <CircleButton
+            onClick={() => {
+              addAnswer(true);
+              nextStage();
+            }}
+          >
+            Yes
+          </CircleButton>
+          <CircleButton
+            onClick={() => {
+              addAnswer(false);
+              nextStage();
+            }}
+          >
+            No
+          </CircleButton>
+        </CircleButtonsContainer>
+      );
+    },
+  };
+
   return (
     <CalculatorSectionContainer>
       {stage === 0 && (
         <>
-          {' '}
           <CalculatorSectionRegularText>
             {"Hey, we're the"} <span>right.shift</span>{' '}
             {`team. We've created a project cost calculator just for you. Give it a try to get an idea of the cost approximation for your project. If you'd like an accurate estimate, please provide your contact details at the end of the cost calculation, and we'll send you a precise quote in no time. We appreciate your trust in us!`}
@@ -359,17 +400,13 @@ function CalculatorSection() {
       {stage === 1 && (
         <>
           <CalculatorSectionHeading>What do you need to develop?</CalculatorSectionHeading>
-          <ArrowButton onClick={nextStage}>Landing page</ArrowButton>
-          <ArrowButton onClick={nextStage}>Website CMS</ArrowButton>
-          <ArrowButton onClick={nextStage}>Application</ArrowButton>
+          {generateAnswers.string(['Landing page', 'Website CMS', 'Application'])}
         </>
       )}
       {stage === 2 && (
         <>
           <CalculatorSectionHeading>What about design?</CalculatorSectionHeading>
-          <ArrowButton onClick={nextStage}>Basic</ArrowButton>
-          <ArrowButton onClick={nextStage}>Standard</ArrowButton>
-          <ArrowButton onClick={nextStage}>Advanced</ArrowButton>
+          {generateAnswers.string(['Basic', 'Standard', 'Advanced'])}
         </>
       )}
       {stage === 3 && (
@@ -377,10 +414,7 @@ function CalculatorSection() {
           <CalculatorSectionHeading>
             Do you need integration with third-party services / API?
           </CalculatorSectionHeading>
-          <CircleButtonsContainer>
-            <CircleButton onClick={nextStage}>Yes</CircleButton>
-            <CircleButton onClick={nextStage}>No</CircleButton>
-          </CircleButtonsContainer>
+          {generateAnswers.boolean()}
         </>
       )}
       {stage === 4 && (
@@ -388,24 +422,36 @@ function CalculatorSection() {
           <CalculatorSectionHeading>
             Do you have media materials? (photos, videos, illustrations, infographics, etc.)
           </CalculatorSectionHeading>
-          <CircleButtonsContainer>
-            <CircleButton onClick={nextStage}>Yes</CircleButton>
-            <CircleButton onClick={nextStage}>No</CircleButton>
-          </CircleButtonsContainer>
+          {generateAnswers.boolean()}
         </>
       )}
       {stage === 5 && (
         <>
           <CalculatorSectionHeading>Select the desired options</CalculatorSectionHeading>
-          <CalculatorSectionDesiredOptions>
-            {possibleDesiredOptions.map((option) => (
-              <CalculatorSectionDesiredOptionLabel key={option}>
-                <CalculatorSectionDesiredOptionCheckbox type="checkbox" value={option} />
-                {option}
-              </CalculatorSectionDesiredOptionLabel>
-            ))}
-          </CalculatorSectionDesiredOptions>
-          <ArrowButton onClick={nextStage}>Calculate</ArrowButton>
+          <form
+            style={{ display: 'contents' }}
+            onSubmit={(event) => {
+              event.preventDefault();
+              const formData = new FormData(event.currentTarget);
+              const selectedOptions = formData.getAll('desired-option') as string[];
+              addAnswer(selectedOptions);
+              nextStage();
+            }}
+          >
+            <CalculatorSectionDesiredOptions>
+              {possibleDesiredOptions.map((option) => (
+                <CalculatorSectionDesiredOptionLabel key={option}>
+                  <CalculatorSectionDesiredOptionCheckbox
+                    type="checkbox"
+                    name="desired-option"
+                    value={option}
+                  />
+                  {option}
+                </CalculatorSectionDesiredOptionLabel>
+              ))}
+            </CalculatorSectionDesiredOptions>
+            <ArrowButton type="submit">Calculate</ArrowButton>
+          </form>
         </>
       )}
     </CalculatorSectionContainer>
