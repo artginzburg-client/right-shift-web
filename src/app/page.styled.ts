@@ -233,7 +233,8 @@ export const NavigationMenuContainer = styled.div<{ workOpened: boolean; calcOpe
     props.workOpened || props.calcOpened
       ? `${navigationMenuContainerWidthInWorkSection}px`
       : `${navigationMenuContainerWidth}px`};
-  height: ${(props) => (props.workOpened ? 'auto' : `${navigationMenuContainerHeight}px`)};
+  height: ${(props) =>
+    props.workOpened || props.calcOpened ? 'auto' : `${navigationMenuContainerHeight}px`};
 
   max-width: 100vw;
   max-height: calc(100svh - 130px);
@@ -569,10 +570,10 @@ export const WorkSectionImage = styled(Image)`
 
 export const CalculatorSectionContainer = styled.div`
   display: flex;
-  height: 100%;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  row-gap: 50px;
 `;
 
 export const CalculatorSectionRegularText = styled.p`
@@ -588,6 +589,10 @@ export const CalculatorSectionRegularText = styled.p`
 
   > span {
     font-weight: 700;
+  }
+
+  ${media.mobileStyle} {
+    font-size: 24px;
   }
 `;
 
@@ -628,6 +633,10 @@ export const ArrowButtonElement = styled.button`
       transform: none;
     }
   }
+
+  ${media.mobileStyle} {
+    font-size: 22px;
+  }
 `;
 
 export const CalculatorSectionHeading = styled.h2`
@@ -644,4 +653,8 @@ export const CalculatorSectionHeading = styled.h2`
   font-weight: 400;
   /* line-height: 70%; */ // one-line
   line-height: 120%; /* 43.2px */ // multi-line
+
+  ${media.mobileStyle} {
+    font-size: 30px;
+  }
 `;
