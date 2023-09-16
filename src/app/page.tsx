@@ -5,8 +5,13 @@ import { FaInstagram, FaLinkedinIn, FaTelegram } from 'react-icons/fa';
 import {
   ArrowButtonElement,
   CalculatorSectionContainer,
+  CalculatorSectionDesiredOptionCheckbox,
+  CalculatorSectionDesiredOptionLabel,
+  CalculatorSectionDesiredOptions,
   CalculatorSectionHeading,
   CalculatorSectionRegularText,
+  CircleButtonElement,
+  CircleButtonsContainer,
   Heading1,
   HeadingsContainer,
   Main,
@@ -292,6 +297,28 @@ function CalculatorSection() {
     setStage((prev) => prev + 1);
   }
 
+  const possibleDesiredOptions = [
+    'The first screen (banner)',
+    'Your cases / examples of work',
+    'FAQ',
+
+    'Catalog of services',
+    'Advantages',
+    'Subscribe to the newsletter',
+
+    'Your achievements and merits',
+    'Table with competitors',
+    'A block with a gift / promo code',
+
+    'Employees',
+    'Location (maps)',
+    'Partners',
+
+    'Contact information',
+    'Video Gallery',
+    'Photo Gallery',
+  ];
+
   return (
     <CalculatorSectionContainer>
       {stage === 0 && (
@@ -325,7 +352,10 @@ function CalculatorSection() {
           <CalculatorSectionHeading>
             Do you need integration with third-party services / API?
           </CalculatorSectionHeading>
-          Yes No
+          <CircleButtonsContainer>
+            <CircleButton onClick={nextStage}>Yes</CircleButton>
+            <CircleButton onClick={nextStage}>No</CircleButton>
+          </CircleButtonsContainer>
         </>
       )}
       {stage === 4 && (
@@ -333,13 +363,24 @@ function CalculatorSection() {
           <CalculatorSectionHeading>
             Do you have media materials? (photos, videos, illustrations, infographics, etc.)
           </CalculatorSectionHeading>
-          Yes No
+          <CircleButtonsContainer>
+            <CircleButton onClick={nextStage}>Yes</CircleButton>
+            <CircleButton onClick={nextStage}>No</CircleButton>
+          </CircleButtonsContainer>
         </>
       )}
-      {stage === 4 && (
+      {stage === 5 && (
         <>
           <CalculatorSectionHeading>Select the desired options</CalculatorSectionHeading>
-          <>A list of options...</>
+          <CalculatorSectionDesiredOptions>
+            {possibleDesiredOptions.map((option) => (
+              <CalculatorSectionDesiredOptionLabel key={option}>
+                <CalculatorSectionDesiredOptionCheckbox type="checkbox" value={option} />
+                {option}
+              </CalculatorSectionDesiredOptionLabel>
+            ))}
+          </CalculatorSectionDesiredOptions>
+          <ArrowButton onClick={nextStage}>Calculate</ArrowButton>
         </>
       )}
     </CalculatorSectionContainer>
@@ -390,5 +431,13 @@ function ArrowRightIcon() {
       <line x1={flippersX1} y1={upperFlipperY1} {...sharedLineProps} />
       <line x1={flippersX1} y1={lowerFlipperY1} {...sharedLineProps} />
     </svg>
+  );
+}
+
+function CircleButton({ children, ...props }: JSX.IntrinsicElements['button']) {
+  return (
+    <CircleButtonElement type="button" {...props}>
+      {children}
+    </CircleButtonElement>
   );
 }

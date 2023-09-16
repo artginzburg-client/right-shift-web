@@ -658,3 +658,88 @@ export const CalculatorSectionHeading = styled.h2`
     font-size: 30px;
   }
 `;
+
+export const CircleButtonsContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 80px;
+`;
+
+export const CircleButtonElement = styled.button`
+  ${reset.button}
+  cursor: pointer;
+
+  /* color: #000; */
+  text-align: center;
+  leading-trim: both;
+  text-edge: cap;
+  /* font-family: GT Eesti Pro Display; */
+  font-size: 24px;
+  /* font-style: normal; */
+  /* font-weight: 400; */
+  /* line-height: 0px; 0% */
+
+  border-radius: 50%;
+  aspect-ratio: 1;
+  width: 70px;
+  height: 70px;
+
+  position: relative;
+  &::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 1px solid #000;
+    border-radius: 50%;
+    top: 0;
+    left: 0;
+
+    transition: transform 0.3s ${easings.easeOutBack};
+  }
+
+  ${media.hoverNonTouch} {
+    &:hover::after {
+      transform: scale(${120 / 70});
+    }
+  }
+  &:active::after {
+    transform: scale(${120 / 70});
+  }
+`;
+
+export const CalculatorSectionDesiredOptions = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 10px;
+  row-gap: 40px;
+`;
+export const CalculatorSectionDesiredOptionLabel = styled.label`
+  color: #1e1e1e;
+  leading-trim: both;
+  text-edge: cap;
+  /* font-family: GT Eesti Pro Display; */
+  font-size: 20px;
+  line-height: 120%; /* 24px */
+
+  display: flex;
+  column-gap: 18px;
+  align-items: center;
+
+  cursor: pointer;
+`;
+export const CalculatorSectionDesiredOptionCheckbox = styled.input`
+  all: unset;
+
+  aspect-ratio: 1;
+  width: 25px;
+  height: 25px;
+  box-sizing: border-box;
+  border: 1px solid #1e1e1e;
+  border-radius: 50%;
+
+  transition: background-color 0.3s ease-out;
+  &:checked {
+    background-color: #1e1e1e;
+  }
+`;
