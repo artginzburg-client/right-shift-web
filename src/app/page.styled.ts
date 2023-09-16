@@ -467,6 +467,7 @@ export const NavigationMenuSocialList = styled.ul`
 
     transition: color 0.3s ease-in-out;
 
+    color: #2e2e2e;
     &:hover {
       color: #a1a1a1;
     }
