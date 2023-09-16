@@ -43,6 +43,7 @@ import nextIconSrc from '~/images/next.svg';
 import { IconType } from 'react-icons/lib';
 import { useEventListener } from 'usehooks-ts';
 import { useOnMounted } from '~/hooks/useOnMounted';
+import { linkBuilders, newTab } from '~/tools/linkHelpers';
 
 const navigationSections = ['work', 'calc', 'contact', 'about'] as const;
 type NavigationSection = (typeof navigationSections)[number];
@@ -213,8 +214,6 @@ function NavigationMenu({
 }) {
   const iconSizePx = 30;
 
-  const phone = '+972 54 777 7777';
-
   const socials: { href: string; Icon: IconType }[] = [
     { href: 'instagram.com', Icon: FaInstagram },
     { href: 'linkedin.com', Icon: FaLinkedinIn },
@@ -257,15 +256,15 @@ function NavigationMenu({
             <NavigationMenuLinksContainer>
               <NavigationMenuContactList>
                 <li>
-                  <Link href={`tel:${phone}`}>{phone}</Link>
+                  <Link {...linkBuilders.tel('+972 54 777 7777')} />
                 </li>
                 <li>
-                  <Link href="mailto:right.shift@gmail.com">right.shift@gmail.com</Link>
+                  <Link {...linkBuilders.mailto('right.shift@gmail.com')} />
                 </li>
               </NavigationMenuContactList>
               <NavigationMenuSocialList>
                 {socials.map(({ href, Icon }) => (
-                  <Link key={href} href={`https://${href}`} target="_blank" rel="noreferrer">
+                  <Link key={href} href={`https://${href}`} {...newTab}>
                     <Icon size={iconSizePx} />
                   </Link>
                 ))}
@@ -306,7 +305,7 @@ function WorkSection() {
   return (
     <WorkSectionContainer>
       {works.map(({ imgSrc, aHref, title }) => (
-        <WorkSectionImageContainer key={title} href={aHref} target="_blank" rel="noreferrer">
+        <WorkSectionImageContainer key={title} href={aHref} {...newTab}>
           <WorkSectionImage src={imgSrc} alt={title} loading="lazy" />
           <WorkSectionNextIcon src={nextIconSrc} alt="Next" />
         </WorkSectionImageContainer>
