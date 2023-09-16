@@ -713,6 +713,10 @@ export const CalculatorSectionDesiredOptions = styled.div`
   grid-template-columns: repeat(3, 1fr);
   column-gap: 10px;
   row-gap: 40px;
+
+  ${media.mobileStyle} {
+    grid-template-columns: 1fr;
+  }
 `;
 export const CalculatorSectionDesiredOptionLabel = styled.label`
   color: #1e1e1e;
