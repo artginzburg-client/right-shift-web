@@ -268,7 +268,7 @@ function NavigationMenu({
               <NavigationMenuSocialList>
                 {socials.map(({ href, Icon }) => (
                   <Link key={href} href={`https://${href}`} {...newTab}>
-                    <Icon size={iconSizePx} />
+                    <Icon size={iconSizePx} color="#2e2e2e" />
                   </Link>
                 ))}
               </NavigationMenuSocialList>
