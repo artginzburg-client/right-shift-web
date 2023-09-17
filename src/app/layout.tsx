@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import './globals.linaria.global';
 import localFont from 'next/font/local';
 
@@ -19,9 +20,14 @@ const gTEestiProDisplay = localFont({
   style: 'swap',
 });
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'right.shift',
   description: 'creating digital products tailored for you',
+  openGraph: {
+    type: 'website',
+    title: 'right.shift',
+    description: 'digital products tailored for you',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
