@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { media } from './utils/media-queries';
 import { colors } from './config/colors';
+import { mobileSafeHoverEffect } from './utils/mobileSafeHoverEffect';
 
 const easings = {
   /** Overshoots */
@@ -501,28 +502,15 @@ export const WorkSectionImageContainer = styled(Link)`
     transition: background-color 0.4s ease-in-out;
   }
 
-  /* WARNING duplicated code due to 'linaria' limitations. Keep in sync! */
-  ${media.hoverNonTouch} {
-    &:hover,
-    &:focus {
-      &::after {
-        background-color: rgba(0, 0, 0, 0.7);
-      }
-
-      ${WorkSectionNextIcon} {
-        transform: ${workSectionNextIconBaseTransform} scale(1);
-      }
-    }
-  }
-  &:active {
+  ${mobileSafeHoverEffect(`
     &::after {
       background-color: rgba(0, 0, 0, 0.7);
     }
 
-    ${WorkSectionNextIcon} {
+    > img:last-child {
       transform: ${workSectionNextIconBaseTransform} scale(1);
     }
-  }
+  `)}
 
   &:nth-child(1) {
     border-top-left-radius: ${mavigationMenuContainerBorderRadius}px;
@@ -674,6 +662,19 @@ export const CircleButtonsContainer = styled.div`
   column-gap: 80px;
 `;
 
+const sharedCircularButtonSubmittingEffect = `
+  &:disabled {
+    cursor: wait;
+    animation: submitting-answers 0.8s ease-in-out 0.3s infinite;
+
+    @keyframes submitting-answers {
+      to {
+        transform: rotateZ(1turn);
+      }
+    }
+  }
+`;
+
 export const CircleButtonElement = styled.button`
   ${reset.button}
   &:not(:disabled) {
@@ -703,25 +704,14 @@ export const CircleButtonElement = styled.button`
     transition: transform 0.3s ${easings.easeOutBack};
   }
 
-  ${media.hoverNonTouch} {
-    &:hover:not(:disabled)::after {
+  ${mobileSafeHoverEffect(`
+    &:not(:disabled)::after {
       transform: scale(${120 / 70});
     }
-  }
-  &:active:not(:disabled)::after {
-    transform: scale(${120 / 70});
-  }
+    outline: none;
+  `)}
 
-  &:disabled {
-    cursor: wait;
-    animation: submitting-answers 0.8s ease-in-out 0.3s infinite;
-
-    @keyframes submitting-answers {
-      to {
-        transform: rotateZ(1turn);
-      }
-    }
-  }
+  ${sharedCircularButtonSubmittingEffect}
 `;
 
 export const CalculatorSectionDesiredOptions = styled.div`
@@ -789,14 +779,11 @@ export const CalculatorSectionInput = styled.input`
     }
 
     transition: box-shadow 0.5s ${easings.easeOutBack};
-    ${media.hoverNonTouch} {
-      &:hover:not(:disabled) {
+    ${mobileSafeHoverEffect(`
+      &:not(:disabled) {
         box-shadow: 0 0 20px 0 #0005;
       }
-    }
-    &:focus:not(:disabled) {
-      box-shadow: 0 0 20px 0 #0005;
-    }
+    `)}
   }
   &:invalid + button {
     cursor: not-allowed;
@@ -857,16 +844,7 @@ export const CalculatorSectionInputSendButton = styled.button`
     transition-property: border-color, transform;
   }
 
-  &:disabled {
-    cursor: wait;
-    animation: submitting-answers 0.8s ease-in-out 0.3s infinite;
-
-    @keyframes submitting-answers {
-      to {
-        transform: rotateZ(1turn);
-      }
-    }
-  }
+  ${sharedCircularButtonSubmittingEffect}
 `;
 
 export const ContactSectionForm = styled.form`
