@@ -267,7 +267,13 @@ function NavigationMenu({
       >
         {!openedSection && (
           <>
-            <NavigationMenuNav>
+            <NavigationMenuNav
+              onFocus={() => {
+                // onFocusWithin, actually.
+                // This still has a small visual inadequacy, but it's better than the whole page glitch-shifting to show the NavigationMenu without writing anything to state.
+                setIsMenuOpened(true);
+              }}
+            >
               {navigationSections.map((section) => (
                 <Link
                   key={section}
