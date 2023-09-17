@@ -341,15 +341,15 @@ export const NavigationMenuPrimaryButton = styled.button`
   &[data-has-opened-section='true'] {
     > svg > g:nth-of-type(1) {
       > line:nth-of-type(1) {
-        transform: translateX(1.75px) translateY(-4px) rotateZ(135deg) scaleX(0.3);
+        transform: translateX(1.75px) translateY(-9px) rotateZ(-180deg) scaleX(0);
         opacity: 0;
       }
       > line:nth-of-type(2) {
-        transform: translateX(1.75px) translateY(2.75px) rotateZ(0deg) scaleX(1);
+        transform: translateX(8.75px) translateY(1px) rotateZ(45deg) scaleX(0.3);
         opacity: 0;
       }
       > line:nth-of-type(3) {
-        transform: translateX(2.75px) translateY(6.75px) rotateZ(-135deg) scaleX(0.3);
+        transform: translateX(2.75px) translateY(-3px) rotateZ(-45deg) scaleX(0.3);
         opacity: 0;
       }
     }
