@@ -150,6 +150,18 @@ function NavigationMenuComponent({
     }
   }
 
+  useEventListener('hashchange', (event) => {
+    // Feature: hashchange navigation
+    const newUrl = new URL(event.newURL);
+    if (newUrl.hash) {
+      const hashTextPart = newUrl.hash.slice(1);
+      if (!navigationSections.includes(hashTextPart as NavigationSection)) return;
+      setOpenedSection(hashTextPart as NavigationSection);
+    } else {
+      setOpenedSection(undefined);
+    }
+  });
+
   useEventListener('keydown', (event) => {
     const code = event.code;
     if (code === 'Space' || code === 'Enter') {
@@ -175,6 +187,9 @@ function NavigationMenuComponent({
 
       setOpenedSection(undefined);
       window.location.hash = '';
+      // This disregards the trailing '#' in the window.location, which looked strange, especially when copied for social purposes.
+      history.replaceState(null, '', ' '); // Feature: hashchange navigation
+
       if (!openedSection) {
         setIsMenuOpened(false);
         setWasJustClosed(true);
@@ -212,6 +227,9 @@ function NavigationMenuComponent({
 
           setOpenedSection(undefined);
           window.location.hash = '';
+          // This disregards the trailing '#' in the window.location, which looked strange, especially when copied for social purposes.
+          history.replaceState(null, '', ' '); // Feature: hashchange navigation
+
           if (!openedSection) {
             setIsMenuOpened((prev) => {
               if (prev) {
@@ -302,6 +320,7 @@ function NavigationMenu({
                   href={`#${section}`}
                   onClick={() => {
                     setOpenedSection(section);
+                    history.pushState(null, '', `#${section}`); // Feature: hashchange navigation
                   }}
                 >
                   {sectionTitles[section]}
