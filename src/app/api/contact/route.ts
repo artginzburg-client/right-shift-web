@@ -12,7 +12,7 @@ export async function POST(request: Request) {
   if (!validateJsonData(jsonData)) throw new Error('Invalid data format');
 
   const markdownMessage = prepareMarkdownForTelegram(`
-${jsonData.text === '' ? '\\[No message\\]' : jsonData.text}
+${jsonData.text === '' ? '\\[No message\\]' : jsonData.text.trim()}
 *Contact* · \`${jsonData.contact === '' ? '\\[No contact\\]' : jsonData.contact}\`${
     isDevMode ? '\n_Sent from Dev Mode_' : ''
   }
