@@ -848,7 +848,7 @@ function ContactSection() {
     );
   }
 
-  const sendButtonVisibleKeyshortcut = isSending ? undefined : 'Meta+Enter';
+  const sendButtonVisibleKeyShortcut = isSending ? undefined : 'Meta+Enter';
 
   return (
     <ContactSectionForm
@@ -876,8 +876,8 @@ function ContactSection() {
         <CircleButton
           type="submit"
           disabled={isSending}
-          aria-keyshortcuts={sendButtonVisibleKeyshortcut}
-          title={isSending ? undefined : `[${sendButtonVisibleKeyshortcut}]`}
+          aria-keyshortcuts={sendButtonVisibleKeyShortcut}
+          title={isSending ? undefined : `[${sendButtonVisibleKeyShortcut}]`}
         >
           <ArrowRightIcon />
         </CircleButton>

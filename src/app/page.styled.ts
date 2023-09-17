@@ -188,7 +188,7 @@ const navigationMenuContainerWidthInWorkSection = 650;
 const navigationMenuContainerHeight = 500;
 // const navigationMenuContainerHeightInWorkSection = 373;
 
-const mavigationMenuContainerBorderRadius = 20;
+const navigationMenuContainerBorderRadius = 20;
 
 const mobileMenuOpenedTopOffset = 65;
 const mobileMenuOpenedBottomShift = 5;
@@ -200,7 +200,7 @@ export const NavigationMenuContainer = styled.div<{
   contactOpened: boolean;
 }>`
   background: #fff;
-  border-radius: ${mavigationMenuContainerBorderRadius}px;
+  border-radius: ${navigationMenuContainerBorderRadius}px;
 
   transition: 0.6s ${easings.easeOutBack};
   transition-property: width, height;
@@ -513,25 +513,25 @@ export const WorkSectionImageContainer = styled(Link)`
   `)}
 
   &:nth-child(1) {
-    border-top-left-radius: ${mavigationMenuContainerBorderRadius}px;
+    border-top-left-radius: ${navigationMenuContainerBorderRadius}px;
     ${media.mobileStyle} {
-      border-top-right-radius: ${mavigationMenuContainerBorderRadius}px;
+      border-top-right-radius: ${navigationMenuContainerBorderRadius}px;
     }
   }
   &:nth-child(2) {
-    border-top-right-radius: ${mavigationMenuContainerBorderRadius}px;
+    border-top-right-radius: ${navigationMenuContainerBorderRadius}px;
     ${media.mobileStyle} {
       border-top-right-radius: 0;
     }
   }
   &:nth-last-child(1) {
-    border-bottom-right-radius: ${mavigationMenuContainerBorderRadius}px;
+    border-bottom-right-radius: ${navigationMenuContainerBorderRadius}px;
     ${media.mobileStyle} {
-      border-bottom-left-radius: ${mavigationMenuContainerBorderRadius}px;
+      border-bottom-left-radius: ${navigationMenuContainerBorderRadius}px;
     }
   }
   &:nth-last-child(2) {
-    border-bottom-left-radius: ${mavigationMenuContainerBorderRadius}px;
+    border-bottom-left-radius: ${navigationMenuContainerBorderRadius}px;
     ${media.mobileStyle} {
       border-bottom-left-radius: 0;
     }
