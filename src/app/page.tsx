@@ -1,6 +1,6 @@
 'use client';
 import { StaticImageData } from 'next/image';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FaInstagram, FaLinkedinIn, FaTelegram } from 'react-icons/fa';
 import {
   ArrowButtonElement,
@@ -54,6 +54,7 @@ import { useEventListener } from 'usehooks-ts';
 import { useOnMounted } from '~/hooks/useOnMounted';
 import { linkBuilders, newTab } from '~/tools/linkHelpers';
 import { useDelayedAutofocus } from '~/hooks/useDelayedAutofocus';
+import { ReactStateRecord } from '~/tools/reactTypeHelpers';
 
 const navigationSections = ['work', 'calc', 'contact', 'about'] as const;
 type NavigationSection = (typeof navigationSections)[number];
@@ -135,6 +136,23 @@ function NavigationMenuComponent({
   /** wasJustClosed is designed to prevent the :hover effects from actuating if the user clicks the close button without moving the cursor in Safari. */
   const [wasJustClosed, setWasJustClosed] = useState(false);
 
+  /** @todo remove this const, it's a hack. The calc stages length should just be known by e.g. stages.length. */
+  const maxCalcStageToGoBack = 6;
+  const [calcStage, setCalcStage] = useState(0);
+
+  useEffect(() => {
+    // This is an automatic way of resetting the calc stage. This effect is shooting blanks most of the time, but precludes the need to manually clean the state.
+    if (openedSection !== 'calc') {
+      setCalcStage(0);
+    }
+  }, [openedSection]);
+  function goStageBackIfInCalc() {
+    if (openedSection === 'calc' && calcStage !== 0 && calcStage !== maxCalcStageToGoBack) {
+      setCalcStage((prev) => prev - 1);
+      return true;
+    }
+  }
+
   useEventListener('keydown', (event) => {
     const code = event.code;
     if (code === 'Space' || code === 'Enter') {
@@ -155,6 +173,9 @@ function NavigationMenuComponent({
         return;
       }
       //#endregion
+
+      if (goStageBackIfInCalc()) return;
+
       setOpenedSection(undefined);
       window.location.hash = '';
       if (!openedSection) {
@@ -190,6 +211,8 @@ function NavigationMenuComponent({
         aria-expanded={isMenuOpened}
         data-has-opened-section={!!openedSection}
         onClick={() => {
+          if (goStageBackIfInCalc()) return;
+
           setOpenedSection(undefined);
           window.location.hash = '';
           if (!openedSection) {
@@ -222,6 +245,8 @@ function NavigationMenuComponent({
         openedSection={openedSection}
         setOpenedSection={setOpenedSection}
         setIsMenuOpened={setIsMenuOpened}
+        calcStage={calcStage}
+        setCalcStage={setCalcStage}
       />
     </NavigationMenuComponentContainer>
   );
@@ -232,12 +257,15 @@ function NavigationMenu({
   setOpenedSection,
 
   setIsMenuOpened,
+
+  calcStage,
+  setCalcStage,
 }: {
   openedSection: NavigationSection | undefined;
   setOpenedSection: React.Dispatch<React.SetStateAction<NavigationSection | undefined>>;
 
   setIsMenuOpened: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
+} & ReactStateRecord<'calcStage', number>) {
   const iconSizePx = 30;
 
   const socials: { href: string; Icon: IconType }[] = [
@@ -306,7 +334,9 @@ function NavigationMenu({
           </>
         )}
         {openedSection === 'work' && <WorkSection />}
-        {openedSection === 'calc' && <CalculatorSection />}
+        {openedSection === 'calc' && (
+          <CalculatorSection calcStage={calcStage} setCalcStage={setCalcStage} />
+        )}
         {openedSection === 'contact' && <ContactSection />}
         {openedSection === 'about' && <AboutSection />}
       </NavigationMenuContainer>
@@ -353,15 +383,14 @@ function WorkSection() {
  * @todo don't rerender on send — or in simple words, just don't clear the email in case the request fails and the user has to send again.
  * @todo Error Handling
  */
-function CalculatorSection() {
+function CalculatorSection({ calcStage, setCalcStage }: ReactStateRecord<'calcStage', number>) {
   const devOnlyDebuggers = {
     shouldFakePromise: false,
     shouldDisplayRetryButton: false,
   };
 
-  const [stage, setStage] = useState(0);
   function nextStage() {
-    setStage((prev) => prev + 1);
+    setCalcStage((prev) => prev + 1);
   }
 
   const [answers, setAnswers] = useState<(string | boolean | string[])[]>([]);
@@ -675,7 +704,7 @@ function CalculatorSection() {
     ),
   ];
 
-  const CurrentStage = stages[stage];
+  const CurrentStage = stages[calcStage];
 
   return (
     <CalculatorSectionContainer
@@ -685,7 +714,7 @@ function CalculatorSection() {
       }}
     >
       <CurrentStage />
-      {stage !== 0 && stage < stages.length - 2 && (
+      {calcStage !== 0 && calcStage < stages.length - 2 && (
         <CalculatorSectionCopyright>
           <span>ⓒ</span> right.shift
         </CalculatorSectionCopyright>
