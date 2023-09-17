@@ -54,7 +54,7 @@ import { useEventListener } from 'usehooks-ts';
 import { useOnMounted } from '~/hooks/useOnMounted';
 import { linkBuilders, newTab } from '~/tools/linkHelpers';
 import { useDelayedAutofocus } from '~/hooks/useDelayedAutofocus';
-import { ReactStateRecord } from '~/tools/reactTypeHelpers';
+import { ReactStateRecord, ReactStateSetter } from '~/tools/reactTypeHelpers';
 
 const navigationSections = ['work', 'calc', 'contact', 'about'] as const;
 type NavigationSection = (typeof navigationSections)[number];
@@ -126,13 +126,8 @@ function NavigationMenuComponent({
 
   isMenuOpened,
   setIsMenuOpened,
-}: {
-  openedSection: NavigationSection | undefined;
-  setOpenedSection: React.Dispatch<React.SetStateAction<NavigationSection | undefined>>;
-
-  isMenuOpened: boolean;
-  setIsMenuOpened: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
+}: ReactStateRecord<'openedSection', NavigationSection | undefined> &
+  ReactStateRecord<'isMenuOpened', boolean>) {
   /** wasJustClosed is designed to prevent the :hover effects from actuating if the user clicks the close button without moving the cursor in Safari. */
   const [wasJustClosed, setWasJustClosed] = useState(false);
 
@@ -260,11 +255,8 @@ function NavigationMenu({
 
   calcStage,
   setCalcStage,
-}: {
-  openedSection: NavigationSection | undefined;
-  setOpenedSection: React.Dispatch<React.SetStateAction<NavigationSection | undefined>>;
-
-  setIsMenuOpened: React.Dispatch<React.SetStateAction<boolean>>;
+}: ReactStateRecord<'openedSection', NavigationSection | undefined> & {
+  setIsMenuOpened: ReactStateSetter<boolean>;
 } & ReactStateRecord<'calcStage', number>) {
   const iconSizePx = 30;
 
