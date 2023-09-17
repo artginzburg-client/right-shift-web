@@ -460,6 +460,7 @@ const CalculatorSection = forwardRef<CalculatorSectionImperativeMethods>((props,
 
           if (calcStage !== 0) {
             setCalcStage((prev) => prev - 1);
+            setAnswers((prev) => prev.slice(0, -1));
             return true;
           }
         },
