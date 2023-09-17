@@ -144,6 +144,17 @@ function NavigationMenuComponent({
       return;
     }
     if (code === 'Escape') {
+      //#region prevent accidentally closing forms while any input is focused. The subsequent Escape press is allowed to close the form though, to not irritate the user.
+      if (
+        document.activeElement &&
+        document.activeElement !== document.body &&
+        'blur' in document.activeElement &&
+        typeof document.activeElement.blur === 'function'
+      ) {
+        document.activeElement.blur();
+        return;
+      }
+      //#endregion
       setOpenedSection(undefined);
       window.location.hash = '';
       if (!openedSection) {
@@ -761,6 +772,8 @@ function ContactSection() {
   }
 
   useEventListener('keydown', (event) => {
+    if (event.code === 'Escape') return;
+
     if (document.activeElement === textareaRef.current) {
       if ((event.metaKey || event.ctrlKey) && event.code === 'Enter') {
         event.preventDefault();
