@@ -209,7 +209,11 @@ const mobileMenuOpenedTopOffset = 135;
 const mobileMenuOpenedBottomShift = 5;
 const mobileMenuOpenedPrimaryButtonTopOffset = 10;
 
-export const NavigationMenuContainer = styled.div<{ workOpened: boolean; calcOpened: boolean }>`
+export const NavigationMenuContainer = styled.div<{
+  workOpened: boolean;
+  calcOpened: boolean;
+  contactOpened: boolean;
+}>`
   background: #fff;
   border-radius: ${mavigationMenuContainerBorderRadius}px;
 
@@ -229,11 +233,13 @@ export const NavigationMenuContainer = styled.div<{ workOpened: boolean; calcOpe
   justify-content: space-between;
 
   width: ${(props) =>
-    props.workOpened || props.calcOpened
+    props.workOpened || props.calcOpened || props.contactOpened
       ? `${navigationMenuContainerWidthInWorkSection}px`
       : `${navigationMenuContainerWidth}px`};
   height: ${(props) =>
-    props.workOpened || props.calcOpened ? 'auto' : `${navigationMenuContainerHeight}px`};
+    props.workOpened || props.calcOpened || props.contactOpened
+      ? 'auto'
+      : `${navigationMenuContainerHeight}px`};
 
   max-width: 100vw;
   max-height: calc(100svh - ${mobileMenuOpenedTopOffset}px);
@@ -243,6 +249,7 @@ export const NavigationMenuContainer = styled.div<{ workOpened: boolean; calcOpe
 export const NavigationMenuComponentContainer = styled.div<{
   workOpened: boolean;
   calcOpened: boolean;
+  contactOpened: boolean;
   isMenuOpened: boolean;
 }>`
   display: flex;
@@ -274,7 +281,7 @@ export const NavigationMenuComponentContainer = styled.div<{
     transform: translateX(
       ${(props) =>
         `${
-          -(props.workOpened || props.calcOpened
+          -(props.workOpened || props.calcOpened || props.contactOpened
             ? navigationMenuContainerWidthInWorkSection
             : navigationMenuContainerWidth) - 65
         }px`}
@@ -673,7 +680,9 @@ export const CircleButtonsContainer = styled.div`
 
 export const CircleButtonElement = styled.button`
   ${reset.button}
-  cursor: pointer;
+  &:not(:disabled) {
+    cursor: pointer;
+  }
 
   /* color: #000; */
   text-align: center;
@@ -705,12 +714,23 @@ export const CircleButtonElement = styled.button`
   }
 
   ${media.hoverNonTouch} {
-    &:hover::after {
+    &:hover:not(:disabled)::after {
       transform: scale(${120 / 70});
     }
   }
-  &:active::after {
+  &:active:not(:disabled)::after {
     transform: scale(${120 / 70});
+  }
+
+  &:disabled {
+    cursor: wait;
+    animation: submitting-answers 0.8s ease-in-out 0.3s infinite;
+
+    @keyframes submitting-answers {
+      to {
+        transform: rotateZ(1turn);
+      }
+    }
   }
 `;
 
@@ -852,4 +872,33 @@ export const CalculatorSectionInputSendButton = styled.button`
       }
     }
   }
+`;
+
+export const ContactSectionForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+`;
+export const ContactSectionSendingInputContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+export const ContactSectionInput = styled.input`
+  all: unset;
+  cursor: auto;
+
+  font-size: 20px;
+  padding-right: 3px;
+  max-width: 70%;
+`;
+export const ContactSectionTextarea = styled.textarea`
+  ${reset.textarea}
+
+  font-size: 20px;
+  font-weight: 300;
+
+  min-height: 100px;
+  max-width: 100%;
+  min-width: 100%;
 `;

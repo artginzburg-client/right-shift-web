@@ -1,6 +1,6 @@
 'use client';
 import { StaticImageData } from 'next/image';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { FaInstagram, FaLinkedinIn, FaTelegram } from 'react-icons/fa';
 import {
   ArrowButtonElement,
@@ -14,6 +14,10 @@ import {
   CalculatorSectionRegularText,
   CircleButtonElement,
   CircleButtonsContainer,
+  ContactSectionForm,
+  ContactSectionInput,
+  ContactSectionSendingInputContainer,
+  ContactSectionTextarea,
   Heading1,
   HeadingsContainer,
   Main,
@@ -46,6 +50,7 @@ import { IconType } from 'react-icons/lib';
 import { useEventListener } from 'usehooks-ts';
 import { useOnMounted } from '~/hooks/useOnMounted';
 import { linkBuilders, newTab } from '~/tools/linkHelpers';
+import { useDelayedAutofocus } from '~/hooks/useDelayedAutofocus';
 
 const navigationSections = ['work', 'calc', 'contact', 'about'] as const;
 type NavigationSection = (typeof navigationSections)[number];
@@ -149,6 +154,7 @@ function NavigationMenuComponent({
     <NavigationMenuComponentContainer
       workOpened={openedSection === 'work'}
       calcOpened={openedSection === 'calc'}
+      contactOpened={openedSection === 'contact'}
       isMenuOpened={isMenuOpened}
       data-is-opened={isMenuOpened}
       data-was-just-closed={wasJustClosed}
@@ -232,6 +238,7 @@ function NavigationMenu({
       <NavigationMenuContainer
         workOpened={openedSection === 'work'}
         calcOpened={openedSection === 'calc'}
+        contactOpened={openedSection === 'contact'}
         id={navigationMenuId}
       >
         {!openedSection && (
@@ -253,7 +260,14 @@ function NavigationMenu({
               >
                 calculate price
               </Link>
-              <Link href="#contact">contact us</Link>
+              <Link
+                href="#contact"
+                onClick={() => {
+                  setOpenedSection('contact');
+                }}
+              >
+                contact us
+              </Link>
               <Link href="#about">about us</Link>
             </NavigationMenuNav>
             <NavigationMenuLinksContainer>
@@ -277,6 +291,7 @@ function NavigationMenu({
         )}
         {openedSection === 'work' && <WorkSection />}
         {openedSection === 'calc' && <CalculatorSection />}
+        {openedSection === 'contact' && <ContactSection />}
       </NavigationMenuContainer>
     </NavigationMenuOuterContainer>
   );
@@ -317,7 +332,10 @@ function WorkSection() {
   );
 }
 
-/** @todo don't rerender on send — or in simple words, just don't clear the email in case the request fails and the user has to send again. */
+/**
+ * @todo don't rerender on send — or in simple words, just don't clear the email in case the request fails and the user has to send again.
+ * @todo Error Handling
+ */
 function CalculatorSection() {
   const devOnlyDebuggers = {
     shouldFakePromise: false,
@@ -664,5 +682,89 @@ function CircleButton({ children, ...props }: JSX.IntrinsicElements['button']) {
     <CircleButtonElement type="button" {...props}>
       {children}
     </CircleButtonElement>
+  );
+}
+
+/** @todo Error Handling */
+function ContactSection() {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const [isSending, setIsSending] = useState(false);
+  async function sendContactForm(contact: string, text: string) {
+    setIsSending(true);
+    try {
+      const result = await fetch(`${window.location.origin}/api/contact`, {
+        method: 'POST',
+        body: JSON.stringify({
+          contact,
+          text,
+        }),
+      });
+      if (!result.ok) {
+        return;
+      }
+      setIsSuccess(true);
+      return result;
+    } finally {
+      setIsSending(false);
+    }
+  }
+
+  useEventListener('keydown', (event) => {
+    if (document.activeElement === textareaRef.current) {
+      if ((event.metaKey || event.ctrlKey) && event.code === 'Enter') {
+        event.preventDefault();
+        formRef.current?.requestSubmit();
+      }
+      return;
+    }
+
+    if (document.activeElement && document.activeElement !== document.body) return;
+
+    textareaRef.current?.focus();
+  });
+
+  useDelayedAutofocus(textareaRef, 100);
+
+  if (isSuccess) {
+    return (
+      <ContactSectionForm style={{ alignItems: 'center' }}>
+        <CalculatorSectionHeading>Thanks</CalculatorSectionHeading>
+        <CalculatorSectionRegularText>{`We received your message, the team will read it during the day. Hope to hear more from you!`}</CalculatorSectionRegularText>
+      </ContactSectionForm>
+    );
+  }
+
+  return (
+    <ContactSectionForm
+      ref={formRef}
+      onSubmit={(event) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+
+        sendContactForm(formData.get('contact') as string, formData.get('text') as string);
+      }}
+      style={{ cursor: isSending ? 'wait' : undefined }}
+    >
+      <ContactSectionTextarea
+        ref={textareaRef}
+        placeholder="Lorem ipsum and so forth... We are humans. Please be nice"
+        name="text"
+        disabled={isSending}
+      />
+      <ContactSectionSendingInputContainer>
+        <ContactSectionInput
+          placeholder="Your name / e-mail / link"
+          name="contact"
+          disabled={isSending}
+        />
+        <CircleButton type="submit" disabled={isSending}>
+          <ArrowRightIcon />
+        </CircleButton>
+      </ContactSectionSendingInputContainer>
+    </ContactSectionForm>
   );
 }

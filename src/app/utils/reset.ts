@@ -19,7 +19,15 @@ export const reset = {
     padding: 0,
     fontFamily: 'inherit',
   } as React.CSSProperties,
-} as Record<'a' | 'ul' | 'button', CSSProperties>;
+  textarea: {
+    appearance: 'none',
+    border: 0,
+    margin: 0,
+    padding: 0,
+    outline: 'none',
+    fontFamily: 'inherit',
+  } as React.CSSProperties,
+} as Record<'a' | 'ul' | 'button' | 'textarea', CSSProperties>;
 
 export const resetExtra = {
   buttonAsIcon: {

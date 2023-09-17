@@ -1,5 +1,6 @@
-const { TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, NODE_ENV } = process.env;
-const isDevMode = NODE_ENV === 'development';
+import { prepareMarkdownForTelegram, telegramSendMessage } from '../utils/telegram';
+
+const isDevMode = process.env.NODE_ENV === 'development';
 
 type ExpectedBody = {
   email: string;
@@ -8,10 +9,6 @@ type ExpectedBody = {
 };
 
 export async function POST(request: Request) {
-  if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
-    throw new Error('Telegram integration is not configured in the environment variables!');
-  }
-
   const jsonData = await request.json();
   if (!validateJsonData(jsonData)) throw new Error('Invalid data format');
 
@@ -32,15 +29,12 @@ export async function POST(request: Request) {
   `);
 
   const sendResult = await telegramSendMessage({
-    chat_id: TELEGRAM_CHAT_ID,
-    parse_mode: 'MarkdownV2',
     text: markdownMessage,
-    disable_notification: isDevMode,
   });
 
   const sendResultJson = await sendResult.json();
   if (!sendResultJson.ok) {
-    console.error('Unexpected error while sending to telegram chat', sendResultJson);
+    console.error('Unexpected error while sending to Telegram from /calc', sendResultJson);
     return new Response('Unexpected error', { status: 500 });
   }
 
@@ -61,27 +55,4 @@ function validateJsonData(jsonData: any): jsonData is ExpectedBody {
   if (!jsonData.cost) return false;
 
   return true;
-}
-
-function telegramSendMessage(data: {
-  chat_id: number | string;
-  text: string;
-  /** @see https://core.telegram.org/bots/api#formatting-options */
-  parse_mode: 'MarkdownV2' | 'HTML';
-  /** Sends the message silently. Users will receive a notification with no sound. */
-  disable_notification?: boolean;
-}) {
-  const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-
-  return fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  });
-}
-
-function prepareMarkdownForTelegram(markdown: string) {
-  return markdown.trim().replaceAll(/-|\(|\)/g, '\\$&');
 }
