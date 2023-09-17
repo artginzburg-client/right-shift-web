@@ -778,6 +778,13 @@ export const CalculatorSectionDesiredOptionCheckbox = styled.input`
   &:checked {
     background-color: #1e1e1e;
   }
+
+  &:focus {
+    border-width: 5px;
+    &:checked {
+      border-color: #fff;
+    }
+  }
 `;
 
 const calculatorSectionInputSendButtonSize = 70;
