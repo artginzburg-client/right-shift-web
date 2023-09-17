@@ -11,6 +11,11 @@ const easings = {
   easeOutBack: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
 };
 
+const experimentalPreciseTypesetting = `
+  leading-trim: both;
+  text-edge: cap;
+`;
+
 export const Main = styled.main`
   min-height: 100svh;
   display: flex;
@@ -36,8 +41,7 @@ export const Heading1 = styled.h1`
 
   /* color: #fff; */
   /* text-align: right; */
-  leading-trim: both;
-  text-edge: cap;
+  ${experimentalPreciseTypesetting}
   /* font-family: 'GT Eesti Pro Display'; */
   font-size: 128px;
   font-style: normal;
@@ -56,8 +60,7 @@ export const Subheading = styled.p`
 
   /* color: #fff; */
   /* text-align: right; */
-  leading-trim: both;
-  text-edge: cap;
+  ${experimentalPreciseTypesetting}
   /* font-family: GT Eesti Pro Display; */
   font-size: 36px;
   font-style: normal;
@@ -395,8 +398,7 @@ export const NavigationMenuNav = styled.nav`
     text-underline-offset: 2px;
 
     color: #000;
-    leading-trim: both;
-    text-edge: cap;
+    ${experimentalPreciseTypesetting}
     /* font-family: GT Eesti Pro Display; */
     font-size: 28px;
     font-style: normal;
@@ -455,8 +457,7 @@ export const NavigationMenuContactList = styled.ul`
 
   > li {
     color: #2e2e2e;
-    leading-trim: both;
-    text-edge: cap;
+    ${experimentalPreciseTypesetting}
     /* font-family: GT Eesti Pro Display; */
     font-size: 16px;
     font-style: normal;
@@ -601,8 +602,7 @@ export const CalculatorSectionCopyright = styled.p`
   bottom: -30px; // -50+20 (to mitigate 50px padding)
   right: -30px;
 
-  leading-trim: both;
-  text-edge: cap;
+  ${experimentalPreciseTypesetting}
   font-size: 20px;
   font-weight: 400;
 
@@ -615,8 +615,7 @@ export const CalculatorSectionCopyright = styled.p`
 export const CalculatorSectionRegularText = styled.p`
   margin: 0;
 
-  leading-trim: both;
-  text-edge: cap;
+  ${experimentalPreciseTypesetting}
   /* font-family: GT Eesti Pro Display; */
   font-size: 28px;
   /* font-style: normal; */
@@ -643,8 +642,7 @@ export const ArrowButtonElement = styled.button`
   min-width: 230px;
 
   color: #000;
-  leading-trim: both;
-  text-edge: cap;
+  ${experimentalPreciseTypesetting}
   /* font-family: GT Eesti Pro Display; */
   font-size: 24px;
   /* font-style: normal; */
@@ -695,8 +693,7 @@ export const CalculatorSectionHeading = styled.h2`
 
   color: #000;
   /* text-align: right; */
-  leading-trim: both;
-  text-edge: cap;
+  ${experimentalPreciseTypesetting}
   /* font-family: GT Eesti Pro Display; */
   font-size: 36px;
   font-style: normal;
@@ -723,8 +720,7 @@ export const CircleButtonElement = styled.button`
 
   /* color: #000; */
   text-align: center;
-  leading-trim: both;
-  text-edge: cap;
+  ${experimentalPreciseTypesetting}
   /* font-family: GT Eesti Pro Display; */
   font-size: 24px;
   /* font-style: normal; */
@@ -783,8 +779,7 @@ export const CalculatorSectionDesiredOptions = styled.div`
 `;
 export const CalculatorSectionDesiredOptionLabel = styled.label`
   color: #1e1e1e;
-  leading-trim: both;
-  text-edge: cap;
+  ${experimentalPreciseTypesetting}
   /* font-family: GT Eesti Pro Display; */
   font-size: 20px;
   line-height: 120%; /* 24px */
