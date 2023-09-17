@@ -187,7 +187,7 @@ function NavigationMenuComponent({
 
       setOpenedSection(undefined);
       window.location.hash = '';
-      // This disregards the trailing '#' in the window.location, which looked strange, especially when copied for social purposes.
+      // This disregards the trailing '#' in the window.location, which looked strange, especially when copied for social purposes. https://stackoverflow.com/a/49373716/11474669
       history.replaceState(null, '', ' '); // Feature: hashchange navigation
 
       if (!openedSection) {
@@ -227,7 +227,7 @@ function NavigationMenuComponent({
 
           setOpenedSection(undefined);
           window.location.hash = '';
-          // This disregards the trailing '#' in the window.location, which looked strange, especially when copied for social purposes.
+          // This disregards the trailing '#' in the window.location, which looked strange, especially when copied for social purposes. https://stackoverflow.com/a/49373716/11474669
           history.replaceState(null, '', ' '); // Feature: hashchange navigation
 
           if (!openedSection) {
