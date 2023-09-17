@@ -39,14 +39,10 @@ export const Main = styled.main`
 export const Heading1 = styled.h1`
   margin: 0;
 
-  /* color: #fff; */
-  /* text-align: right; */
   ${experimentalPreciseTypesetting}
-  /* font-family: 'GT Eesti Pro Display'; */
   font-size: 128px;
   font-style: normal;
   font-weight: 700;
-  /* line-height: 0px; 0% */
 
   transition: transform 0.2s ${easings.easeOutBack};
 
@@ -58,14 +54,10 @@ export const Heading1 = styled.h1`
 export const Subheading = styled.p`
   margin: 0;
 
-  /* color: #fff; */
-  /* text-align: right; */
   ${experimentalPreciseTypesetting}
-  /* font-family: GT Eesti Pro Display; */
   font-size: 36px;
   font-style: normal;
   font-weight: 300;
-  /* line-height: 0px; 0% */
   letter-spacing: 0.72px;
 
   ${media.mobileStyle} {
@@ -126,16 +118,6 @@ export const RotatingWordsInSubheadingContainer = styled.span`
 `;
 
 export const HeadingsContainer = styled.div`
-  /* display: flex; */
-  /* height: 100%; */
-  /* flex-direction: column; */
-  /* align-items: flex-start; */
-  /* justify-content: flex-end; */
-  /* justify-content: flex-end; */
-  /* align-items: flex-end; */
-  /* margin-top: auto; */
-  /* padding-top: auto; */
-
   padding: 62px 65px;
 
   color: #fff;
@@ -158,7 +140,6 @@ export const SubheadingSpan = styled.span`
   position: relative;
 
   padding: 3px 7px;
-  /* padding-bottom: 4px; */
 
   &::before {
     content: '';
@@ -222,9 +203,6 @@ export const NavigationMenuContainer = styled.div<{
 
   transition: 0.6s ${easings.easeOutBack};
   transition-property: width, height;
-
-  /* width: ${navigationMenuContainerWidth}px; */
-  /* height: ${navigationMenuContainerHeight}px; */
 
   margin-right: 65px;
 
@@ -337,7 +315,6 @@ export const NavigationMenuPrimaryButton = styled.button`
       --line-scale: 1.25;
     }
 
-    /* transition-duration: 0.5s; */
     transition-delay: 0.25s;
   }
 
@@ -458,7 +435,6 @@ export const NavigationMenuContactList = styled.ul`
   > li {
     color: #2e2e2e;
     ${experimentalPreciseTypesetting}
-    /* font-family: GT Eesti Pro Display; */
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -509,8 +485,6 @@ export const WorkSectionNextIcon = styled(Image)`
   top: 50%;
   transform: ${workSectionNextIconBaseTransform} scale(0);
 
-  /* opacity: 0; */
-
   transition: 0.4s ${easings.easeOutBack};
   transition-property: transform;
 `;
@@ -536,7 +510,6 @@ export const WorkSectionImageContainer = styled(Link)`
       }
 
       ${WorkSectionNextIcon} {
-        /* opacity: 1; */
         transform: ${workSectionNextIconBaseTransform} scale(1);
       }
     }
@@ -547,7 +520,6 @@ export const WorkSectionImageContainer = styled(Link)`
     }
 
     ${WorkSectionNextIcon} {
-      /* opacity: 1; */
       transform: ${workSectionNextIconBaseTransform} scale(1);
     }
   }
@@ -616,10 +588,7 @@ export const CalculatorSectionRegularText = styled.p`
   margin: 0;
 
   ${experimentalPreciseTypesetting}
-  /* font-family: GT Eesti Pro Display; */
   font-size: 28px;
-  /* font-style: normal; */
-  /* font-weight: 400; */
   line-height: 120%; /* 33.6px */
 
   > span {
@@ -643,13 +612,8 @@ export const ArrowButtonElement = styled.button`
 
   color: #000;
   ${experimentalPreciseTypesetting}
-  /* font-family: GT Eesti Pro Display; */
   font-size: 24px;
-  /* font-style: normal; */
-  /* font-weight: 400; */
-  /* line-height: 0px; 0% */
   line-height: 58%;
-  /* box-sizing: border-box; */
 
   > svg > line:nth-of-type(1) {
     transform: scaleX(0.5);
@@ -692,9 +656,7 @@ export const CalculatorSectionHeading = styled.h2`
   padding: 0;
 
   color: #000;
-  /* text-align: right; */
   ${experimentalPreciseTypesetting}
-  /* font-family: GT Eesti Pro Display; */
   font-size: 36px;
   font-style: normal;
   font-weight: 400;
@@ -718,14 +680,9 @@ export const CircleButtonElement = styled.button`
     cursor: pointer;
   }
 
-  /* color: #000; */
   text-align: center;
   ${experimentalPreciseTypesetting}
-  /* font-family: GT Eesti Pro Display; */
   font-size: 24px;
-  /* font-style: normal; */
-  /* font-weight: 400; */
-  /* line-height: 0px; 0% */
 
   border-radius: 50%;
   aspect-ratio: 1;
@@ -780,7 +737,6 @@ export const CalculatorSectionDesiredOptions = styled.div`
 export const CalculatorSectionDesiredOptionLabel = styled.label`
   color: #1e1e1e;
   ${experimentalPreciseTypesetting}
-  /* font-family: GT Eesti Pro Display; */
   font-size: 20px;
   line-height: 120%; /* 24px */
 
