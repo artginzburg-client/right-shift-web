@@ -149,6 +149,7 @@ function NavigationMenuComponent({
       }
     }
   });
+  const primaryButtonVisibleKeyShortcut = isMenuOpened ? 'Escape' : 'Enter';
 
   return (
     <NavigationMenuComponentContainer
@@ -186,6 +187,8 @@ function NavigationMenuComponent({
             });
           }
         }}
+        aria-keyshortcuts={primaryButtonVisibleKeyShortcut}
+        title={`[${primaryButtonVisibleKeyShortcut}]`}
       >
         <svg
           width="50"
@@ -435,8 +438,10 @@ function CalculatorSection() {
     },
   };
 
+  type QuestionSlug = 'subject' | 'design' | 'integrations' | 'options';
+
   const questions: Record<
-    string,
+    QuestionSlug,
     {
       type: 'string' | 'boolean' | 'stringArray';
       title: string;
@@ -495,6 +500,34 @@ function CalculatorSection() {
       },
     },
   };
+
+  //#region If I'm going to implement this, it better be across the whole app, not just here.
+  // useEventListener('keydown', (event) => {
+  //   if (stage === 0 && event.code === 'Enter') {
+  //     nextStage();
+  //     return;
+  //   }
+
+  //   //#region future functionality for answering questions with a keyboard even faster than with Tab-navigation. Probably, not going to be used like that – I want to first focus the answer visually on keydown, and only addAnswer() on keyup, with an ability for the user to press Escape while he's holding the digit to cancel. Also, add Y/N for boolean answers.
+  //   // if ([1, 2, 3].includes(stage) && event.code.startsWith('Digit')) {
+  //   //   console.log('select');
+  //   //   const digit = Number(event.code.replace('Digit', ''));
+  //   //   if (digit > 3 || digit < 1) return;
+  //   //   /** Remove this const later, it's hacky and inefficient. */
+  //   //   const stageIndexToName: QuestionSlug[] = ['subject', 'design', 'integrations', 'options'];
+  //   //   const currentStageName = stageIndexToName[stage - 1];
+  //   //   const currentQuestion = questions[currentStageName];
+  //   //   if (currentQuestion.choice) {
+  //   //     addAnswer(currentQuestion.choice[digit - 1]);
+  //   //   } else {
+  //   //     if (digit === 3) return;
+  //   //     addAnswer(digit === 1 ? true : false);
+  //   //   }
+  //   //   nextStage();
+  //   // }
+  //   //#endregion
+  // });
+  //#endregion
 
   function approximateCost() {
     const costOfHour = 30;
@@ -732,6 +765,8 @@ function ContactSection() {
     );
   }
 
+  const sendButtonVisibleKeyshortcut = isSending ? undefined : 'Meta+Enter';
+
   return (
     <ContactSectionForm
       ref={formRef}
@@ -755,7 +790,12 @@ function ContactSection() {
           name="contact"
           disabled={isSending}
         />
-        <CircleButton type="submit" disabled={isSending}>
+        <CircleButton
+          type="submit"
+          disabled={isSending}
+          aria-keyshortcuts={sendButtonVisibleKeyshortcut}
+          title={isSending ? undefined : `[${sendButtonVisibleKeyshortcut}]`}
+        >
           <ArrowRightIcon />
         </CircleButton>
       </ContactSectionSendingInputContainer>
