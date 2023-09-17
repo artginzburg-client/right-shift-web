@@ -229,6 +229,13 @@ function NavigationMenu({
     { href: 't.me/ginzart', Icon: FaTelegram },
   ];
 
+  const sectionTitles: Record<NavigationSection, string> = {
+    work: 'our work',
+    calc: 'calculate price',
+    contact: 'contact us',
+    about: 'about us',
+  };
+
   return (
     <NavigationMenuOuterContainer
       onMouseEnter={() => {
@@ -244,31 +251,17 @@ function NavigationMenu({
         {!openedSection && (
           <>
             <NavigationMenuNav>
-              <Link
-                href="#work"
-                onClick={() => {
-                  setOpenedSection('work');
-                }}
-              >
-                our work
-              </Link>
-              <Link
-                href="#calc"
-                onClick={() => {
-                  setOpenedSection('calc');
-                }}
-              >
-                calculate price
-              </Link>
-              <Link
-                href="#contact"
-                onClick={() => {
-                  setOpenedSection('contact');
-                }}
-              >
-                contact us
-              </Link>
-              <Link href="#about">about us</Link>
+              {navigationSections.map((section) => (
+                <Link
+                  key={section}
+                  href={`#${section}`}
+                  onClick={() => {
+                    setOpenedSection(section);
+                  }}
+                >
+                  {sectionTitles[section]}
+                </Link>
+              ))}
             </NavigationMenuNav>
             <NavigationMenuLinksContainer>
               <NavigationMenuContactList>
@@ -292,6 +285,7 @@ function NavigationMenu({
         {openedSection === 'work' && <WorkSection />}
         {openedSection === 'calc' && <CalculatorSection />}
         {openedSection === 'contact' && <ContactSection />}
+        {openedSection === 'about' && <AboutSection />}
       </NavigationMenuContainer>
     </NavigationMenuOuterContainer>
   );
@@ -766,5 +760,13 @@ function ContactSection() {
         </CircleButton>
       </ContactSectionSendingInputContainer>
     </ContactSectionForm>
+  );
+}
+
+function AboutSection() {
+  return (
+    <CalculatorSectionRegularText>
+      {`We're developers, designers, and marketers. Some of the members have been in the industry since 2018, and we are capable of building everything Web that you can imagine.`}
+    </CalculatorSectionRegularText>
   );
 }
