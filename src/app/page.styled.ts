@@ -205,9 +205,9 @@ const navigationMenuContainerHeight = 500;
 
 const mavigationMenuContainerBorderRadius = 20;
 
-const mobileMenuOpenedTopOffset = 135;
+const mobileMenuOpenedTopOffset = 65;
 const mobileMenuOpenedBottomShift = 5;
-const mobileMenuOpenedPrimaryButtonTopOffset = 10;
+const mobileMenuOpenedPrimaryButtonTopOffset = -53;
 
 export const NavigationMenuContainer = styled.div<{
   workOpened: boolean;
@@ -372,6 +372,12 @@ export const NavigationMenuPrimaryButton = styled.button`
     > path {
       opacity: 0;
       transition: opacity 0.5s ease-in-out;
+    }
+  }
+
+  &[aria-expanded='false'] {
+    ${media.mobileStyle} {
+      transform: translateY(-63px);
     }
   }
 `;
