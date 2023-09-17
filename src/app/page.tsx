@@ -1,6 +1,6 @@
 'use client';
 import { StaticImageData } from 'next/image';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { FaInstagram, FaLinkedinIn, FaTelegram } from 'react-icons/fa';
 import {
   ArrowButtonElement,
@@ -55,6 +55,7 @@ import { useOnMounted } from '~/hooks/useOnMounted';
 import { linkBuilders, newTab } from '~/tools/linkHelpers';
 import { useDelayedAutofocus } from '~/hooks/useDelayedAutofocus';
 import { ReactStateRecord, ReactStateSetter } from '~/tools/reactTypeHelpers';
+import { usePreventClosingWindowWhileSending } from '~/hooks/usePreventClosingWindowWhileSending';
 
 const navigationSections = ['work', 'calc', 'contact', 'about'] as const;
 type NavigationSection = (typeof navigationSections)[number];
@@ -394,6 +395,7 @@ function CalculatorSection({ calcStage, setCalcStage }: ReactStateRecord<'calcSt
   const [calculatedCost, setCalculatedCost] = useState<number>();
 
   const [isSendingAnswers, setIsSendingAnswers] = useState(false);
+  usePreventClosingWindowWhileSending(isSendingAnswers);
   async function sendAnswers(email: string) {
     const newCost = approximateCost();
     setCalculatedCost(newCost);
@@ -779,6 +781,7 @@ function ContactSection() {
   const [isSuccess, setIsSuccess] = useState(false);
 
   const [isSending, setIsSending] = useState(false);
+  usePreventClosingWindowWhileSending(isSending);
   async function sendContactForm(contact: string, text: string) {
     setIsSending(true);
     try {
