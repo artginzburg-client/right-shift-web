@@ -1,6 +1,6 @@
 'use client';
 import { StaticImageData } from 'next/image';
-import { useRef, useState } from 'react';
+import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { FaInstagram, FaLinkedinIn, FaTelegram } from 'react-icons/fa';
 import {
   ArrowButtonElement,
@@ -119,284 +119,18 @@ function RotatingWordInSubheading() {
   );
 }
 
-const navigationMenuId = 'primary-navigation';
-
-function NavigationMenuComponent({
-  openedSection,
-  setOpenedSection,
-
-  isMenuOpened,
-  setIsMenuOpened,
-}: ReactStateRecord<'openedSection', NavigationSection | undefined> &
-  ReactStateRecord<'isMenuOpened', boolean>) {
-  /** wasJustClosed is designed to prevent the :hover effects from actuating if the user clicks the close button without moving the cursor in Safari. */
-  const [wasJustClosed, setWasJustClosed] = useState(false);
-
-  /** @todo remove this const, it's a hack. The calc stages length should just be known by e.g. stages.length. */
-  const maxCalcStageToGoBack = 6;
-  const [calcStage, setCalcStage] = useState(0);
-
+interface CalculatorSectionImperativeMethods {
   /** @returns whether to prevent closing the NavigationMenu. */
-  function goStageBackIfInCalc() {
-    if (openedSection === 'calc') {
-      if (calcStage === maxCalcStageToGoBack) {
-        setCalcStage(0);
-      } else {
-        if (calcStage !== 0) {
-          setCalcStage((prev) => prev - 1);
-          return true;
-        }
-      }
-    }
-  }
-
-  useEventListener('hashchange', (event) => {
-    // Feature: hashchange navigation
-    const newUrl = new URL(event.newURL);
-    if (newUrl.hash) {
-      const hashTextPart = newUrl.hash.slice(1);
-      if (!navigationSections.includes(hashTextPart as NavigationSection)) return;
-      setOpenedSection(hashTextPart as NavigationSection);
-    } else {
-      setOpenedSection(undefined);
-    }
-  });
-
-  useEventListener('keydown', (event) => {
-    const code = event.code;
-    if (code === 'Space' || code === 'Enter') {
-      if (!openedSection) {
-        setIsMenuOpened(true);
-      }
-      return;
-    }
-    if (code === 'Escape') {
-      //#region prevent accidentally closing forms while any input is focused. The subsequent Escape press is allowed to close the form though, to not irritate the user.
-      if (
-        document.activeElement &&
-        document.activeElement !== document.body &&
-        'blur' in document.activeElement &&
-        typeof document.activeElement.blur === 'function'
-      ) {
-        document.activeElement.blur();
-        return;
-      }
-      //#endregion
-
-      if (goStageBackIfInCalc()) return;
-
-      setOpenedSection(undefined);
-      window.location.hash = '';
-      // This disregards the trailing '#' in the window.location, which looked strange, especially when copied for social purposes. https://stackoverflow.com/a/49373716/11474669
-      history.replaceState(null, '', ' '); // Feature: hashchange navigation
-
-      if (!openedSection) {
-        setIsMenuOpened(false);
-        setWasJustClosed(true);
-      }
-    }
-  });
-  const primaryButtonVisibleKeyShortcut = isMenuOpened ? 'Escape' : 'Enter';
-
-  return (
-    <NavigationMenuComponentContainer
-      workOpened={openedSection === 'work'}
-      calcOpened={openedSection === 'calc'}
-      contactOpened={openedSection === 'contact'}
-      isMenuOpened={isMenuOpened}
-      data-is-opened={isMenuOpened}
-      data-was-just-closed={wasJustClosed}
-      onMouseEnter={() => {
-        setWasJustClosed(false);
-      }}
-      onClick={
-        isMenuOpened
-          ? undefined
-          : () => {
-              setIsMenuOpened(true);
-            }
-      }
-    >
-      <NavigationMenuPrimaryButton
-        aria-label="Menu"
-        aria-controls={navigationMenuId}
-        aria-expanded={isMenuOpened}
-        data-has-opened-section={!!openedSection}
-        onClick={() => {
-          if (goStageBackIfInCalc()) return;
-
-          setOpenedSection(undefined);
-          window.location.hash = '';
-          // This disregards the trailing '#' in the window.location, which looked strange, especially when copied for social purposes. https://stackoverflow.com/a/49373716/11474669
-          history.replaceState(null, '', ' '); // Feature: hashchange navigation
-
-          if (!openedSection) {
-            setIsMenuOpened((prev) => {
-              if (prev) {
-                setWasJustClosed(true);
-              }
-              return !prev;
-            });
-          }
-        }}
-        aria-keyshortcuts={primaryButtonVisibleKeyShortcut}
-        title={`[${primaryButtonVisibleKeyShortcut}]`}
-      >
-        <svg
-          width="50"
-          height="50"
-          viewBox="0 0 50 50"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-hidden
-        >
-          <circle cx="25" cy="25" r="24.25" stroke="#fff" strokeWidth="1.5" />
-          <BurgerIcon />
-          <BackIcon />
-        </svg>
-      </NavigationMenuPrimaryButton>
-
-      <NavigationMenu
-        openedSection={openedSection}
-        setOpenedSection={setOpenedSection}
-        setIsMenuOpened={setIsMenuOpened}
-        calcStage={calcStage}
-        setCalcStage={setCalcStage}
-      />
-    </NavigationMenuComponentContainer>
-  );
-}
-
-function NavigationMenu({
-  openedSection,
-  setOpenedSection,
-
-  setIsMenuOpened,
-
-  calcStage,
-  setCalcStage,
-}: ReactStateRecord<'openedSection', NavigationSection | undefined> & {
-  setIsMenuOpened: ReactStateSetter<boolean>;
-} & ReactStateRecord<'calcStage', number>) {
-  const iconSizePx = 30;
-
-  const socials: { href: string; Icon: IconType }[] = [
-    { href: 'www.instagram.com/art.ginzburg/', Icon: FaInstagram },
-    { href: 'www.linkedin.com/in/artginzburg/', Icon: FaLinkedinIn },
-    { href: 't.me/ginzart', Icon: FaTelegram },
-  ];
-
-  const sectionTitles: Record<NavigationSection, string> = {
-    work: 'our work',
-    calc: 'calculate price',
-    contact: 'contact us',
-    about: 'about us',
-  };
-
-  return (
-    <NavigationMenuOuterContainer
-      onMouseEnter={() => {
-        setIsMenuOpened(true);
-      }}
-    >
-      <NavigationMenuContainer
-        workOpened={openedSection === 'work'}
-        calcOpened={openedSection === 'calc'}
-        contactOpened={openedSection === 'contact'}
-        id={navigationMenuId}
-      >
-        {!openedSection && (
-          <>
-            <NavigationMenuNav
-              onFocus={() => {
-                // onFocusWithin, actually.
-                // This still has a small visual inadequacy, but it's better than the whole page glitch-shifting to show the NavigationMenu without writing anything to state.
-                setIsMenuOpened(true);
-              }}
-            >
-              {navigationSections.map((section) => (
-                <Link
-                  key={section}
-                  href={`#${section}`}
-                  onClick={() => {
-                    setOpenedSection(section);
-                    history.pushState(null, '', `#${section}`); // Feature: hashchange navigation
-                  }}
-                >
-                  {sectionTitles[section]}
-                </Link>
-              ))}
-            </NavigationMenuNav>
-            <NavigationMenuLinksContainer>
-              <NavigationMenuContactList>
-                <li>
-                  <Link {...linkBuilders.tel('+972 54 777 7777')} />
-                </li>
-                <li>
-                  <Link {...linkBuilders.mailto('right.shift@gmail.com')} />
-                </li>
-              </NavigationMenuContactList>
-              <NavigationMenuSocialList>
-                {socials.map(({ href, Icon }) => (
-                  <Link key={href} href={`https://${href}`} {...newTab}>
-                    <Icon size={iconSizePx} />
-                  </Link>
-                ))}
-              </NavigationMenuSocialList>
-            </NavigationMenuLinksContainer>
-          </>
-        )}
-        {openedSection === 'work' && <WorkSection />}
-        {openedSection === 'calc' && (
-          <CalculatorSection calcStage={calcStage} setCalcStage={setCalcStage} />
-        )}
-        {openedSection === 'contact' && <ContactSection />}
-        {openedSection === 'about' && <AboutSection />}
-      </NavigationMenuContainer>
-    </NavigationMenuOuterContainer>
-  );
-}
-
-function WorkSection() {
-  const works: { imgSrc: string | StaticImageData; aHref: string; title: string }[] = [
-    {
-      imgSrc: nfoTokenImage,
-      aHref: 'https://nfotoken.com',
-      title: 'NFO Token',
-    },
-    {
-      imgSrc: schoolMapImage,
-      aHref: 'https://ginzburg.art/CASProject/',
-      title: 'School Map',
-    },
-    {
-      imgSrc: stackImage,
-      aHref: 'https://stack.ginzburg.art',
-      title: 'stack',
-    },
-    {
-      imgSrc: kryshiIVysheImage,
-      aHref: 'https://concerts.kryshi-i-vyshe.ru',
-      title: 'Kryshe i Vyshe',
-    },
-  ];
-  return (
-    <WorkSectionContainer>
-      {works.map(({ imgSrc, aHref, title }) => (
-        <WorkSectionImageContainer key={title} href={aHref} {...newTab}>
-          <WorkSectionImage src={imgSrc} alt={title} loading="lazy" />
-          <WorkSectionNextIcon src={nextIconSrc} alt="Next" />
-        </WorkSectionImageContainer>
-      ))}
-    </WorkSectionContainer>
-  );
+  goStageBack: () => true | undefined;
 }
 
 /**
  * @todo don't rerender on send — or in simple words, just don't clear the email in case the request fails and the user has to send again.
  * @todo Error Handling
  */
-function CalculatorSection({ calcStage, setCalcStage }: ReactStateRecord<'calcStage', number>) {
+const CalculatorSection = forwardRef<CalculatorSectionImperativeMethods>((props, ref) => {
+  const [calcStage, setCalcStage] = useState(0);
+
   const devOnlyDebuggers = {
     shouldFakePromise: false,
     shouldDisplayRetryButton: false,
@@ -717,6 +451,20 @@ function CalculatorSection({ calcStage, setCalcStage }: ReactStateRecord<'calcSt
       </>
     ),
   ];
+  useImperativeHandle(
+    ref,
+    () =>
+      ({
+        goStageBack() {
+          if (calcStage === stages.length - 1) return;
+
+          if (calcStage !== 0) {
+            setCalcStage((prev) => prev - 1);
+            return true;
+          }
+        },
+      } as CalculatorSectionImperativeMethods),
+  );
 
   const CurrentStage = stages[calcStage];
 
@@ -734,6 +482,262 @@ function CalculatorSection({ calcStage, setCalcStage }: ReactStateRecord<'calcSt
         </CalculatorSectionCopyright>
       )}
     </CalculatorSectionContainer>
+  );
+});
+CalculatorSection.displayName = 'CalculatorSection';
+
+const navigationMenuId = 'primary-navigation';
+
+function NavigationMenuComponent({
+  openedSection,
+  setOpenedSection,
+
+  isMenuOpened,
+  setIsMenuOpened,
+}: ReactStateRecord<'openedSection', NavigationSection | undefined> &
+  ReactStateRecord<'isMenuOpened', boolean>) {
+  /** wasJustClosed is designed to prevent the :hover effects from actuating if the user clicks the close button without moving the cursor in Safari. */
+  const [wasJustClosed, setWasJustClosed] = useState(false);
+
+  const calculatorSectionRef = useRef<CalculatorSectionImperativeMethods>(null);
+
+  useEventListener('hashchange', (event) => {
+    // Feature: hashchange navigation
+    const newUrl = new URL(event.newURL);
+    if (newUrl.hash) {
+      const hashTextPart = newUrl.hash.slice(1);
+      if (!navigationSections.includes(hashTextPart as NavigationSection)) return;
+      setOpenedSection(hashTextPart as NavigationSection);
+    } else {
+      setOpenedSection(undefined);
+    }
+  });
+
+  useEventListener('keydown', (event) => {
+    const code = event.code;
+    if (code === 'Space' || code === 'Enter') {
+      if (!openedSection) {
+        setIsMenuOpened(true);
+      }
+      return;
+    }
+    if (code === 'Escape') {
+      //#region prevent accidentally closing forms while any input is focused. The subsequent Escape press is allowed to close the form though, to not irritate the user.
+      if (
+        document.activeElement &&
+        document.activeElement !== document.body &&
+        'blur' in document.activeElement &&
+        typeof document.activeElement.blur === 'function'
+      ) {
+        document.activeElement.blur();
+        return;
+      }
+      //#endregion
+
+      if (calculatorSectionRef.current?.goStageBack()) return;
+
+      setOpenedSection(undefined);
+      window.location.hash = '';
+      // This disregards the trailing '#' in the window.location, which looked strange, especially when copied for social purposes. https://stackoverflow.com/a/49373716/11474669
+      history.replaceState(null, '', ' '); // Feature: hashchange navigation
+
+      if (!openedSection) {
+        setIsMenuOpened(false);
+        setWasJustClosed(true);
+      }
+    }
+  });
+  const primaryButtonVisibleKeyShortcut = isMenuOpened ? 'Escape' : 'Enter';
+
+  return (
+    <NavigationMenuComponentContainer
+      workOpened={openedSection === 'work'}
+      calcOpened={openedSection === 'calc'}
+      contactOpened={openedSection === 'contact'}
+      isMenuOpened={isMenuOpened}
+      data-is-opened={isMenuOpened}
+      data-was-just-closed={wasJustClosed}
+      onMouseEnter={() => {
+        setWasJustClosed(false);
+      }}
+      onClick={
+        isMenuOpened
+          ? undefined
+          : () => {
+              setIsMenuOpened(true);
+            }
+      }
+    >
+      <NavigationMenuPrimaryButton
+        aria-label="Menu"
+        aria-controls={navigationMenuId}
+        aria-expanded={isMenuOpened}
+        data-has-opened-section={!!openedSection}
+        onClick={() => {
+          if (calculatorSectionRef.current?.goStageBack()) return;
+
+          setOpenedSection(undefined);
+          window.location.hash = '';
+          // This disregards the trailing '#' in the window.location, which looked strange, especially when copied for social purposes. https://stackoverflow.com/a/49373716/11474669
+          history.replaceState(null, '', ' '); // Feature: hashchange navigation
+
+          if (!openedSection) {
+            setIsMenuOpened((prev) => {
+              if (prev) {
+                setWasJustClosed(true);
+              }
+              return !prev;
+            });
+          }
+        }}
+        aria-keyshortcuts={primaryButtonVisibleKeyShortcut}
+        title={`[${primaryButtonVisibleKeyShortcut}]`}
+      >
+        <svg
+          width="50"
+          height="50"
+          viewBox="0 0 50 50"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden
+        >
+          <circle cx="25" cy="25" r="24.25" stroke="#fff" strokeWidth="1.5" />
+          <BurgerIcon />
+          <BackIcon />
+        </svg>
+      </NavigationMenuPrimaryButton>
+
+      <NavigationMenu
+        openedSection={openedSection}
+        setOpenedSection={setOpenedSection}
+        setIsMenuOpened={setIsMenuOpened}
+        calculatorSectionRef={calculatorSectionRef}
+      />
+    </NavigationMenuComponentContainer>
+  );
+}
+
+function NavigationMenu({
+  openedSection,
+  setOpenedSection,
+
+  setIsMenuOpened,
+
+  calculatorSectionRef,
+}: ReactStateRecord<'openedSection', NavigationSection | undefined> & {
+  setIsMenuOpened: ReactStateSetter<boolean>;
+} & {
+  calculatorSectionRef: React.RefObject<CalculatorSectionImperativeMethods>;
+}) {
+  const iconSizePx = 30;
+
+  const socials: { href: string; Icon: IconType }[] = [
+    { href: 'www.instagram.com/art.ginzburg/', Icon: FaInstagram },
+    { href: 'www.linkedin.com/in/artginzburg/', Icon: FaLinkedinIn },
+    { href: 't.me/ginzart', Icon: FaTelegram },
+  ];
+
+  const sectionTitles: Record<NavigationSection, string> = {
+    work: 'our work',
+    calc: 'calculate price',
+    contact: 'contact us',
+    about: 'about us',
+  };
+
+  return (
+    <NavigationMenuOuterContainer
+      onMouseEnter={() => {
+        setIsMenuOpened(true);
+      }}
+    >
+      <NavigationMenuContainer
+        workOpened={openedSection === 'work'}
+        calcOpened={openedSection === 'calc'}
+        contactOpened={openedSection === 'contact'}
+        id={navigationMenuId}
+      >
+        {!openedSection && (
+          <>
+            <NavigationMenuNav
+              onFocus={() => {
+                // onFocusWithin, actually.
+                // This still has a small visual inadequacy, but it's better than the whole page glitch-shifting to show the NavigationMenu without writing anything to state.
+                setIsMenuOpened(true);
+              }}
+            >
+              {navigationSections.map((section) => (
+                <Link
+                  key={section}
+                  href={`#${section}`}
+                  onClick={() => {
+                    setOpenedSection(section);
+                    history.pushState(null, '', `#${section}`); // Feature: hashchange navigation
+                  }}
+                >
+                  {sectionTitles[section]}
+                </Link>
+              ))}
+            </NavigationMenuNav>
+            <NavigationMenuLinksContainer>
+              <NavigationMenuContactList>
+                <li>
+                  <Link {...linkBuilders.tel('+972 54 777 7777')} />
+                </li>
+                <li>
+                  <Link {...linkBuilders.mailto('right.shift@gmail.com')} />
+                </li>
+              </NavigationMenuContactList>
+              <NavigationMenuSocialList>
+                {socials.map(({ href, Icon }) => (
+                  <Link key={href} href={`https://${href}`} {...newTab}>
+                    <Icon size={iconSizePx} />
+                  </Link>
+                ))}
+              </NavigationMenuSocialList>
+            </NavigationMenuLinksContainer>
+          </>
+        )}
+        {openedSection === 'work' && <WorkSection />}
+        {openedSection === 'calc' && <CalculatorSection ref={calculatorSectionRef} />}
+        {openedSection === 'contact' && <ContactSection />}
+        {openedSection === 'about' && <AboutSection />}
+      </NavigationMenuContainer>
+    </NavigationMenuOuterContainer>
+  );
+}
+
+function WorkSection() {
+  const works: { imgSrc: string | StaticImageData; aHref: string; title: string }[] = [
+    {
+      imgSrc: nfoTokenImage,
+      aHref: 'https://nfotoken.com',
+      title: 'NFO Token',
+    },
+    {
+      imgSrc: schoolMapImage,
+      aHref: 'https://ginzburg.art/CASProject/',
+      title: 'School Map',
+    },
+    {
+      imgSrc: stackImage,
+      aHref: 'https://stack.ginzburg.art',
+      title: 'stack',
+    },
+    {
+      imgSrc: kryshiIVysheImage,
+      aHref: 'https://concerts.kryshi-i-vyshe.ru',
+      title: 'Kryshe i Vyshe',
+    },
+  ];
+  return (
+    <WorkSectionContainer>
+      {works.map(({ imgSrc, aHref, title }) => (
+        <WorkSectionImageContainer key={title} href={aHref} {...newTab}>
+          <WorkSectionImage src={imgSrc} alt={title} loading="lazy" />
+          <WorkSectionNextIcon src={nextIconSrc} alt="Next" />
+        </WorkSectionImageContainer>
+      ))}
+    </WorkSectionContainer>
   );
 }
 
