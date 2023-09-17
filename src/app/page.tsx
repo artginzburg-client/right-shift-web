@@ -135,16 +135,17 @@ function NavigationMenuComponent({
   const maxCalcStageToGoBack = 6;
   const [calcStage, setCalcStage] = useState(0);
 
-  useEffect(() => {
-    // This is an automatic way of resetting the calc stage. This effect is shooting blanks most of the time, but precludes the need to manually clean the state.
-    if (openedSection !== 'calc') {
-      setCalcStage(0);
-    }
-  }, [openedSection]);
+  /** @returns whether to prevent closing the NavigationMenu. */
   function goStageBackIfInCalc() {
-    if (openedSection === 'calc' && calcStage !== 0 && calcStage !== maxCalcStageToGoBack) {
-      setCalcStage((prev) => prev - 1);
-      return true;
+    if (openedSection === 'calc') {
+      if (calcStage === maxCalcStageToGoBack) {
+        setCalcStage(0);
+      } else {
+        if (calcStage !== 0) {
+          setCalcStage((prev) => prev - 1);
+          return true;
+        }
+      }
     }
   }
 
