@@ -4,7 +4,9 @@ import { useRef, useState } from 'react';
 import { FaInstagram, FaLinkedinIn, FaTelegram } from 'react-icons/fa';
 import {
   ArrowButtonElement,
+  CalculatorSectionArrowButtonsContainer,
   CalculatorSectionContainer,
+  CalculatorSectionCopyright,
   CalculatorSectionDesiredOptionCheckbox,
   CalculatorSectionDesiredOptionLabel,
   CalculatorSectionDesiredOptions,
@@ -12,6 +14,7 @@ import {
   CalculatorSectionInput,
   CalculatorSectionInputSendButton,
   CalculatorSectionRegularText,
+  CalculatorSectionSeparator,
   CircleButtonElement,
   CircleButtonsContainer,
   ContactSectionForm,
@@ -402,17 +405,24 @@ function CalculatorSection() {
 
   const generateAnswers = {
     string(possibleAnswers: string[]) {
-      return possibleAnswers.map((possibleAnswer) => (
-        <ArrowButton
-          key={possibleAnswer}
-          onClick={() => {
-            addAnswer(possibleAnswer);
-            nextStage();
-          }}
-        >
-          {possibleAnswer}
-        </ArrowButton>
-      ));
+      return (
+        <CalculatorSectionArrowButtonsContainer>
+          {possibleAnswers.map((possibleAnswer, possibleAnswerIndex, arr) => (
+            <>
+              <ArrowButton
+                key={possibleAnswer}
+                onClick={() => {
+                  addAnswer(possibleAnswer);
+                  nextStage();
+                }}
+              >
+                {possibleAnswer}
+              </ArrowButton>
+              {possibleAnswerIndex !== arr.length - 1 && <CalculatorSectionSeparator />}
+            </>
+          ))}
+        </CalculatorSectionArrowButtonsContainer>
+      );
     },
     boolean() {
       return (
@@ -651,8 +661,18 @@ function CalculatorSection() {
   const CurrentStage = stages[stage];
 
   return (
-    <CalculatorSectionContainer style={{ cursor: isSendingAnswers ? 'wait' : undefined }}>
+    <CalculatorSectionContainer
+      style={{
+        cursor: isSendingAnswers ? 'wait' : undefined,
+        position: 'relative', // for the copyright
+      }}
+    >
       <CurrentStage />
+      {stage !== 0 && stage < stages.length - 2 && (
+        <CalculatorSectionCopyright>
+          <span>ⓒ</span> right.shift
+        </CalculatorSectionCopyright>
+      )}
     </CalculatorSectionContainer>
   );
 }

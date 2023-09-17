@@ -594,6 +594,23 @@ export const CalculatorSectionContainer = styled.div`
   align-items: center;
   row-gap: 50px;
 `;
+export const CalculatorSectionCopyright = styled.p`
+  margin: 0;
+
+  position: absolute;
+  bottom: -30px; // -50+20 (to mitigate 50px padding)
+  right: -30px;
+
+  leading-trim: both;
+  text-edge: cap;
+  font-size: 20px;
+  font-weight: 400;
+
+  > span {
+    font-size: 16px;
+    font-weight: 700;
+  }
+`;
 
 export const CalculatorSectionRegularText = styled.p`
   margin: 0;
@@ -656,6 +673,20 @@ export const ArrowButtonElement = styled.button`
   ${media.mobileStyle} {
     font-size: 22px;
   }
+`;
+
+export const CalculatorSectionArrowButtonsContainer = styled.div`
+  display: inherit;
+  flex-direction: inherit;
+  align-items: inherit;
+  row-gap: 30px;
+`;
+export const CalculatorSectionSeparator = styled.div`
+  width: 100px;
+  height: 1px;
+  border-radius: 2px;
+  background-color: #000;
+  opacity: 0.4; /* was 0.5 in Figma, tuned down to better match the look. */
 `;
 
 export const CalculatorSectionHeading = styled.h2`
