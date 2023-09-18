@@ -89,7 +89,10 @@ export default function Home() {
 
   return (
     <Main data-has-opened-section={!!openedSection}>
-      <HeadingsContainer data-has-opened-section={!!openedSection}>
+      <HeadingsContainer
+        data-is-menu-opened={isMenuOpened}
+        data-has-opened-section={!!openedSection}
+      >
         <Heading1 style={{ transform: isPressingRightShift ? 'scale(0.7)' : undefined }}>
           right.shift
         </Heading1>

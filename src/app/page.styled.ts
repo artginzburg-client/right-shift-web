@@ -17,7 +17,9 @@ const experimentalPreciseTypesetting = `
   text-edge: cap;
 `;
 
-export const Main = styled.main`
+export const Main = styled.main<{
+  'data-has-opened-section': boolean;
+}>`
   min-height: 100svh;
   display: flex;
   align-items: flex-end;
@@ -118,22 +120,38 @@ export const RotatingWordsInSubheadingContainer = styled.span`
   }
 `;
 
-export const HeadingsContainer = styled.div`
+const headingsContainerMobilePadding = 10;
+/** @todo low-priority, but do not rely on hard-coded static values — fix the mobile layout properly. */
+const headingsContainerMobileHeightHardCoded = 101 + headingsContainerMobilePadding * 2;
+export const HeadingsContainer = styled.div<{
+  'data-is-menu-opened': boolean;
+  'data-has-opened-section': boolean;
+}>`
   padding: 62px 65px;
 
   color: #fff;
 
   transition: 0.45s ease-in-out;
   transition-property: filter, color;
+
+  ${media.mobileStyle} {
+    transition: filter 1.5s, opacity 0.1s;
+
+    padding: ${headingsContainerMobilePadding}px;
+    padding-top: calc(100svh - ${headingsContainerMobileHeightHardCoded}px);
+
+    &[data-is-menu-opened='true'] {
+      filter: blur(2px);
+      opacity: 0.2;
+
+      transition: filter 0.5s, opacity 0.25s;
+    }
+  }
+
   &[data-has-opened-section='true'] {
     filter: blur(10px);
 
     color: rgba(255, 255, 255, 0.7);
-  }
-
-  ${media.mobileStyle} {
-    padding: 10px;
-    margin-top: 40px;
   }
 `;
 
@@ -183,7 +201,7 @@ export const NavigationMenuOuterContainer = styled.div`
   left: 100%;
 
   ${media.mobileStyle} {
-    top: 100%;
+    bottom: 100%;
     left: unset;
     right: -50%;
     transform: translateX(calc(50% - 17.5px));
@@ -198,8 +216,10 @@ const navigationMenuContainerHeight = 500;
 
 const navigationMenuContainerBorderRadius = 20;
 
+/** Not sure this constant is called right. */
 const mobileMenuOpenedTopOffset = 65;
-const mobileMenuOpenedBottomShift = 5;
+// const mobileMenuOpenedBottomShift = 5;
+/** Not sure this constant is called right. */
 const mobileMenuOpenedPrimaryButtonTopOffset = -53;
 
 export const NavigationMenuContainer = styled.div<{
@@ -236,6 +256,8 @@ export const NavigationMenuContainer = styled.div<{
   overflow: auto;
 `;
 
+/** @todo use this constant in the svg width, height, viewBox (inside NavigationMenuPrimaryButton in page.tsx). Exclude the variable first, obviously. */
+const navigationMenuPrimaryButtonSize = 50;
 export const NavigationMenuComponentContainer = styled.div<{
   workOpened: boolean;
   calcOpened: boolean;
@@ -255,15 +277,14 @@ export const NavigationMenuComponentContainer = styled.div<{
 
   transition: transform 0.6s ${easings.easeOutBack};
 
-  &:hover[data-is-opened='false'][data-was-just-closed='false'] {
-    transform: translateX(${-65}px);
+  ${media.hoverNonTouch} {
+    /* Desktop-only "peek" effect */
+    &:hover[data-is-opened='false'][data-was-just-closed='false'] {
+      transform: translateX(${-65}px);
 
-    > button {
-      transform: rotate(-45deg);
-    }
-
-    ${media.mobileStyle} {
-      transform: translateY(${-65}px);
+      > button {
+        transform: rotate(-45deg);
+      }
     }
   }
 
@@ -278,9 +299,7 @@ export const NavigationMenuComponentContainer = styled.div<{
     );
 
     ${media.mobileStyle} {
-      transform: translateY(
-        calc(-100svh + ${mobileMenuOpenedTopOffset - mobileMenuOpenedBottomShift}px)
-      );
+      transform: translateY(${-65}px);
     }
   }
 
@@ -294,7 +313,10 @@ export const NavigationMenuComponentContainer = styled.div<{
     margin-left: 0;
     margin-top: auto;
     padding-right: 0;
-    padding-bottom: ${65 - mobileMenuOpenedBottomShift + mobileMenuOpenedPrimaryButtonTopOffset}px;
+    margin-bottom: ${mobileMenuOpenedPrimaryButtonTopOffset}px;
+
+    transform: rotateZ(90deg) translateY(calc(-50vw + ${navigationMenuPrimaryButtonSize / 2}px))
+      translateX(calc(-50svh + ${mobileMenuOpenedPrimaryButtonTopOffset / 2}px));
   }
 `;
 
@@ -364,9 +386,10 @@ export const NavigationMenuPrimaryButton = styled.button`
     }
   }
 
-  &[aria-expanded='false'] {
-    ${media.mobileStyle} {
-      transform: translateY(-63px);
+  ${media.mobileStyle} {
+    transform: translateY(${23 / 2}px) rotateZ(0.75turn);
+    &[aria-expanded='true'] {
+      transform: translateY(6px) rotateZ(0.5turn);
     }
   }
 `;
