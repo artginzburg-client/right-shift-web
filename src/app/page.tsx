@@ -634,7 +634,7 @@ function NavigationMenu({
 
   const socials: { href: string; Icon: IconType }[] = [
     { href: 'www.instagram.com/art.ginzburg/', Icon: FaInstagram },
-    { href: 'www.linkedin.com/in/artginzburg/', Icon: FaLinkedinIn },
+    { href: 'www.linkedin.com/company/right-shift-dev', Icon: FaLinkedinIn },
     { href: 't.me/ginzart', Icon: FaTelegram },
   ];
 
@@ -682,7 +682,7 @@ function NavigationMenu({
             <NavigationMenuLinksContainer>
               <NavigationMenuContactList>
                 <li>
-                  <Link {...linkBuilders.tel('+972 54 777 7777')} />
+                  <Link {...linkBuilders.tel('+31 6 45 10 65 69')} />
                 </li>
                 <li>
                   <Link {...linkBuilders.mailto('right.shift@gmail.com')} />
