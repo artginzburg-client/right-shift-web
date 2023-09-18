@@ -13,7 +13,7 @@ const gTEestiProDisplay = localFont({
       weight: '400',
     },
     {
-      path: '../fonts/gt-eesti-pro-display/GT-Eesti-Display-Light.otf',
+      path: '../fonts/gt-eesti-pro-display/GT-Eesti-Display-Light.otf', // TODO! figure out if this should be Thin instead of Light, like in the design.
       weight: '300',
     },
   ],
