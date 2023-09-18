@@ -137,36 +137,44 @@ export const HeadingsContainer = styled.div`
   }
 `;
 
+const subheadingSpanStyleConfig = {
+  borderRadius: 10,
+  mobile: {
+    borderRadius: 6, // fine-tuned by eye. It would be 5 'cause 36/18=2, 10/2=5 (Subheading font-sizes), but 5 looks too edgy (does not feel like the desktop version).
+  },
+};
 export const SubheadingSpan = styled.span`
   position: relative;
 
   padding: 3px 7px;
 
   &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
     inset: 0;
     width: 100%;
     height: 100%;
 
-    border-radius: 10px;
     box-sizing: border-box;
-    z-index: -1;
 
     background: rgb(255, 0, 0);
     background: ${colors.rainbow};
   }
   &::after {
-    content: '';
-    position: absolute;
     inset: 1.5px;
     width: calc(100%-3px);
     height: calc(100%-3px);
     background-color: #1e1e1e;
-    border-radius: 10px;
+  }
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+
+    border-radius: ${subheadingSpanStyleConfig.borderRadius}px;
     z-index: -1;
+
+    ${media.mobileStyle} {
+      border-radius: ${subheadingSpanStyleConfig.mobile.borderRadius}px;
+    }
   }
 `;
 
