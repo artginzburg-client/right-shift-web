@@ -23,6 +23,9 @@ dependencies:
   '@types/react-dom':
     specifier: 18.2.7
     version: 18.2.7
+  css-clamper:
+    specifier: ^0.2.0
+    version: 0.2.0
   eslint:
     specifier: 8.49.0
     version: 8.49.0
@@ -2153,6 +2156,11 @@ packages:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
+    dev: false
+
+  /css-clamper@0.2.0:
+    resolution: {integrity: sha512-Z+8oHPkstG7MdH5FlAiP7NAc5N+OhUHkqQcbsMeWUfDh0n5NE+FqOusjeec6bj+dUHDfIh4x6tQliE4XjFFENg==}
+    engines: {node: '>=16.6.0'}
     dev: false
 
   /csstype@3.1.2:

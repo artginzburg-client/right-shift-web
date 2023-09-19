@@ -1,4 +1,5 @@
 import { styled } from '@linaria/react';
+import { clampify } from 'css-clamper';
 
 import { reset, resetExtra } from './utils/reset';
 import Image from 'next/image';
@@ -222,6 +223,15 @@ const mobileMenuOpenedTopOffset = 65;
 /** Not sure this constant is called right. */
 const mobileMenuOpenedPrimaryButtonTopOffset = -53;
 
+const navigationMenuPrimaryButtonTargetOffsetToMenuWhenOpened = 30;
+const navigationMenuPrimaryButtonOffsetToMenuWhenOpenedMaxViewport = `414px`; // iPhone 8 Plus
+
+const navigationMenuContainerClampedMaxHeight = clampify(
+  `${mobileMenuOpenedTopOffset}px`,
+  `${mobileMenuOpenedTopOffset + navigationMenuPrimaryButtonTargetOffsetToMenuWhenOpened - 3}px`,
+  undefined,
+  navigationMenuPrimaryButtonOffsetToMenuWhenOpenedMaxViewport,
+);
 export const NavigationMenuContainer = styled.div<{
   workOpened: boolean;
   calcOpened: boolean;
@@ -252,12 +262,21 @@ export const NavigationMenuContainer = styled.div<{
       : `${navigationMenuContainerHeight}px`};
 
   max-width: 100vw;
-  max-height: calc(100svh - ${mobileMenuOpenedTopOffset}px);
+  max-height: calc(100svh - ${navigationMenuContainerClampedMaxHeight});
   overflow: auto;
 `;
 
 /** @todo use this constant in the svg width, height, viewBox (inside NavigationMenuPrimaryButton in page.tsx). Exclude the variable first, obviously. */
 const navigationMenuPrimaryButtonSize = 50;
+/** It's not precisely the offset from the bottom, but the closest thing to it. */
+const navigationMenuComponentContainerClampedOffsetFromScreenBottom = clampify(
+  `${-65}px`,
+  `${
+    -navigationMenuPrimaryButtonSize - navigationMenuPrimaryButtonTargetOffsetToMenuWhenOpened - 9
+  }px`,
+  undefined,
+  navigationMenuPrimaryButtonOffsetToMenuWhenOpenedMaxViewport,
+);
 export const NavigationMenuComponentContainer = styled.div<{
   workOpened: boolean;
   calcOpened: boolean;
@@ -299,7 +318,7 @@ export const NavigationMenuComponentContainer = styled.div<{
     );
 
     ${media.mobileStyle} {
-      transform: translateY(${-65}px);
+      transform: translateY(${navigationMenuComponentContainerClampedOffsetFromScreenBottom});
     }
   }
 
@@ -320,6 +339,12 @@ export const NavigationMenuComponentContainer = styled.div<{
   }
 `;
 
+const navigationMenuPrimaryButtonClampedOffsetToMenuWhenOpened = clampify(
+  '6px',
+  `${navigationMenuPrimaryButtonTargetOffsetToMenuWhenOpened}px`,
+  undefined,
+  navigationMenuPrimaryButtonOffsetToMenuWhenOpenedMaxViewport,
+);
 export const NavigationMenuPrimaryButton = styled.button`
   ${reset.button}
   ${resetExtra.buttonAsIcon}
@@ -389,7 +414,8 @@ export const NavigationMenuPrimaryButton = styled.button`
   ${media.mobileStyle} {
     transform: translateY(${23 / 2}px) rotateZ(0.75turn);
     &[aria-expanded='true'] {
-      transform: translateY(6px) rotateZ(0.5turn);
+      transform: translateY(${navigationMenuPrimaryButtonClampedOffsetToMenuWhenOpened})
+        rotateZ(0.5turn);
     }
   }
 `;
