@@ -223,6 +223,8 @@ const mobileMenuOpenedTopOffset = 65;
 /** Not sure this constant is called right. */
 const mobileMenuOpenedPrimaryButtonTopOffset = -53;
 
+const navigationMenuContainerPaddingInCalc = 50;
+
 const navigationMenuPrimaryButtonTargetOffsetToMenuWhenOpened = 30;
 const navigationMenuPrimaryButtonOffsetToMenuWhenOpenedMaxViewport = `414px`; // iPhone 8 Plus
 
@@ -246,7 +248,12 @@ export const NavigationMenuContainer = styled.div<{
   margin-right: 65px;
 
   box-sizing: border-box;
-  padding: ${(props) => (props.calcOpened ? '50px' : props.workOpened ? '5px' : '50px 40px')};
+  padding: ${(props) =>
+    props.calcOpened
+      ? `${navigationMenuContainerPaddingInCalc}px`
+      : props.workOpened
+      ? '5px'
+      : '50px 40px'};
 
   display: flex;
   flex-direction: column;
@@ -616,8 +623,8 @@ export const CalculatorSectionCopyright = styled.p`
   margin: 0;
 
   position: absolute;
-  bottom: -30px; // -50+20 (to mitigate 50px padding)
-  right: -30px;
+  bottom: ${-navigationMenuContainerPaddingInCalc + 20}px;
+  right: ${-navigationMenuContainerPaddingInCalc + 20}px;
 
   ${experimentalPreciseTypesetting}
   font-size: 20px;
@@ -679,6 +686,14 @@ export const ArrowButtonElement = styled.button`
 
   ${media.mobileStyle} {
     font-size: 22px;
+  }
+`;
+export const ArrowButtonElementStickyOnSmallHeight = styled(ArrowButtonElement)`
+  @media (max-height: 800px) {
+    position: sticky;
+    bottom: ${-navigationMenuContainerPaddingInCalc + 20}px;
+    background-color: #fff;
+    box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.3);
   }
 `;
 

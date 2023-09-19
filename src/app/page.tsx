@@ -4,6 +4,7 @@ import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { FaInstagram, FaLinkedinIn, FaTelegram } from 'react-icons/fa';
 import {
   ArrowButtonElement,
+  ArrowButtonElementStickyOnSmallHeight,
   CalculatorSectionArrowButtonsContainer,
   CalculatorSectionContainer,
   CalculatorSectionCopyright,
@@ -301,7 +302,9 @@ const CalculatorSection = forwardRef<CalculatorSectionImperativeMethods>((props,
                 </CalculatorSectionDesiredOptionLabel>
               ))}
             </CalculatorSectionDesiredOptions>
-            <ArrowButton type="submit">Calculate</ArrowButton>
+            <ArrowButton Element={ArrowButtonElementStickyOnSmallHeight} type="submit">
+              Calculate
+            </ArrowButton>
           </form>
         );
       },
@@ -385,7 +388,9 @@ const CalculatorSection = forwardRef<CalculatorSectionImperativeMethods>((props,
           {"Hey, we're the"} <span>right.shift</span>{' '}
           {`team. We've created a project cost calculator just for you. Give it a try to get an idea of the cost approximation for your project. If you'd like an accurate estimate, please provide your contact details at the end of the cost calculation, and we'll send you a precise quote in no time. We appreciate your trust in us!`}
         </CalculatorSectionRegularText>
-        <ArrowButton onClick={nextStage}>{"Let's get started"}</ArrowButton>
+        <ArrowButton Element={ArrowButtonElementStickyOnSmallHeight} onClick={nextStage}>
+          {"Let's get started"}
+        </ArrowButton>
       </>
     ),
     ...Object.values(questions).map(
@@ -745,12 +750,16 @@ function WorkSection() {
   );
 }
 
-function ArrowButton({ children, ...props }: JSX.IntrinsicElements['button']) {
+function ArrowButton({
+  children,
+  Element = ArrowButtonElement,
+  ...props
+}: JSX.IntrinsicElements['button'] & { Element?: React.FC<JSX.IntrinsicElements['button']> }) {
   return (
-    <ArrowButtonElement type="button" {...props}>
+    <Element type="button" {...props}>
       {children}
       <ArrowRightIcon style={{ marginLeft: 15 }} />
-    </ArrowButtonElement>
+    </Element>
   );
 }
 
