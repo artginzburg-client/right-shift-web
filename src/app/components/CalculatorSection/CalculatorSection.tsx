@@ -35,6 +35,7 @@ export const CalculatorSection = forwardRef<CalculatorSectionImperativeMethods>(
 
   const devOnlyDebuggers = {
     shouldFakePromise: false,
+    shouldRejectFakePromise: false,
     shouldDisplayRetryButton: false,
   };
 
@@ -60,7 +61,11 @@ export const CalculatorSection = forwardRef<CalculatorSectionImperativeMethods>(
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           setIsSendingAnswers(false);
-          resolve(true);
+          if (devOnlyDebuggers.shouldRejectFakePromise) {
+            reject('Dev-only debugger initiated rejection');
+          } else {
+            resolve(true);
+          }
         }, 4000);
       });
     }
@@ -355,6 +360,7 @@ export const CalculatorSection = forwardRef<CalculatorSectionImperativeMethods>(
       </>
     ),
   ];
+
   useImperativeHandle(
     ref,
     () =>
