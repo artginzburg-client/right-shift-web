@@ -1,0 +1,1 @@
+- Separate `images` directory into `icons` and `images`.
