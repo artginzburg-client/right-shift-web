@@ -25,6 +25,7 @@ import {
   CalculatorSectionImperativeMethods,
   CalculatorSection,
 } from '../CalculatorSection/CalculatorSection';
+import { ContentSheetParsed } from '~/app/utils/getSheet';
 
 const navigationMenuId = 'primary-navigation';
 export function NavigationMenuComponent({
@@ -32,8 +33,9 @@ export function NavigationMenuComponent({
   setOpenedSection,
   isMenuOpened,
   setIsMenuOpened,
+  contentSheet,
 }: ReactStateRecord<'openedSection', NavigationSection | undefined> &
-  ReactStateRecord<'isMenuOpened', boolean>) {
+  ReactStateRecord<'isMenuOpened', boolean> & { contentSheet: ContentSheetParsed }) {
   /** wasJustClosed is designed to prevent the :hover effects from actuating if the user clicks the close button without moving the cursor in Safari. */
   const [wasJustClosed, setWasJustClosed] = useState(false);
 
@@ -149,6 +151,7 @@ export function NavigationMenuComponent({
         setOpenedSection={setOpenedSection}
         setIsMenuOpened={setIsMenuOpened}
         calculatorSectionRef={calculatorSectionRef}
+        contentSheet={contentSheet}
       />
     </NavigationMenuComponentContainer>
   );
@@ -158,17 +161,18 @@ function NavigationMenu({
   setOpenedSection,
   setIsMenuOpened,
   calculatorSectionRef,
+  contentSheet,
 }: ReactStateRecord<'openedSection', NavigationSection | undefined> & {
   setIsMenuOpened: ReactStateSetter<boolean>;
 } & {
   calculatorSectionRef: React.RefObject<CalculatorSectionImperativeMethods>;
-}) {
+} & { contentSheet: ContentSheetParsed }) {
   const iconSizePx = 30;
 
   const socials: { href: string; Icon: IconType }[] = [
-    { href: 'www.instagram.com/art.ginzburg/', Icon: FaInstagram },
-    { href: 'www.linkedin.com/company/right-shift-dev', Icon: FaLinkedinIn },
-    { href: 't.me/ginzart', Icon: FaTelegram },
+    { href: contentSheet.Socials.Instagram, Icon: FaInstagram },
+    { href: contentSheet.Socials.LinkedIn, Icon: FaLinkedinIn },
+    { href: contentSheet.Socials.Telegram, Icon: FaTelegram },
   ];
 
   const sectionTitles: Record<NavigationSection, string> = {
@@ -215,10 +219,10 @@ function NavigationMenu({
             <NavigationMenuLinksContainer>
               <NavigationMenuContactList>
                 <li>
-                  <Link {...linkBuilders.tel('+31 6 45 10 65 69')} />
+                  <Link {...linkBuilders.tel(contentSheet.Contacts.Phone)} />
                 </li>
                 <li>
-                  <Link {...linkBuilders.mailto('right.shift@gmail.com')} />
+                  <Link {...linkBuilders.mailto(contentSheet.Contacts.Email)} />
                 </li>
               </NavigationMenuContactList>
               <NavigationMenuSocialList>
