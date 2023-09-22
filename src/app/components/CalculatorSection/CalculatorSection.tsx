@@ -27,7 +27,6 @@ export interface CalculatorSectionImperativeMethods {
   goStageBack: () => true | undefined;
 }
 /**
- * @todo don't rerender on send — or in simple words, just don't clear the email in case the request fails and the user has to send again.
  * @todo Error Handling
  */
 export const CalculatorSection = forwardRef<CalculatorSectionImperativeMethods>((props, ref) => {
@@ -305,42 +304,7 @@ export const CalculatorSection = forwardRef<CalculatorSectionImperativeMethods>(
           );
         },
     ),
-    () => (
-      <>
-        <CalculatorSectionHeading>{`The e-mail to reach out to`}</CalculatorSectionHeading>
-        <CalculatorSectionRegularText>
-          {`We're human, we don't spam :)`}
-        </CalculatorSectionRegularText>
-        <form
-          style={{ display: 'contents' }}
-          onSubmit={async (event) => {
-            event.preventDefault();
-            const formData = new FormData(event.currentTarget);
-            const email = formData.get('email') as string;
-            await sendAnswers(email);
-            nextStage();
-          }}
-        >
-          <label style={{ width: '100%' }}>
-            <CalculatorSectionInput
-              disabled={isSendingAnswers}
-              type="email"
-              name="email"
-              placeholder="Your e-mail"
-              required
-              autoFocus
-            />
-            <CalculatorSectionInputSendButton
-              disabled={isSendingAnswers}
-              type="submit"
-              className={isSendingAnswers ? 'submitting' : undefined}
-            >
-              <ArrowRightIcon />
-            </CalculatorSectionInputSendButton>
-          </label>
-        </form>
-      </>
-    ),
+    StageEmailFunction({ sendAnswers, nextStage, isSendingAnswers }),
     () => (
       <>
         <CalculatorSectionHeading>{`Thanks!`}</CalculatorSectionHeading>
@@ -396,3 +360,59 @@ export const CalculatorSection = forwardRef<CalculatorSectionImperativeMethods>(
   );
 });
 CalculatorSection.displayName = 'CalculatorSection';
+
+/** The `emailState` is only necessary to not clear the email in case the request fails and the user has to send again. */
+function StageEmailFunction({
+  sendAnswers,
+  nextStage,
+  isSendingAnswers,
+}: {
+  sendAnswers: (email: string) => Promise<unknown>;
+  nextStage: () => void;
+  isSendingAnswers: boolean;
+}) {
+  const [emailState, setEmailState] = useState('');
+
+  return function StageEmail() {
+    return (
+      <>
+        <CalculatorSectionHeading>{`The e-mail to reach out to`}</CalculatorSectionHeading>
+        <CalculatorSectionRegularText>
+          {`We're human, we don't spam :)`}
+        </CalculatorSectionRegularText>
+        <form
+          style={{ display: 'contents' }}
+          onSubmit={async (event) => {
+            event.preventDefault();
+            const formData = new FormData(event.currentTarget);
+            const email = formData.get('email') as string;
+            await sendAnswers(email);
+            nextStage();
+          }}
+        >
+          <label style={{ width: '100%' }}>
+            <CalculatorSectionInput
+              disabled={isSendingAnswers}
+              type="email"
+              name="email"
+              placeholder="Your e-mail"
+              required
+              autoFocus
+              value={emailState}
+              onChange={(event) => {
+                setEmailState(event.currentTarget.value);
+              }}
+            />
+            <CalculatorSectionInputSendButton
+              disabled={isSendingAnswers}
+              type="submit"
+              className={isSendingAnswers ? 'submitting' : undefined}
+            >
+              <ArrowRightIcon />
+            </CalculatorSectionInputSendButton>
+          </label>
+        </form>
+      </>
+    );
+  };
+}
