@@ -41,6 +41,8 @@ export const NavigationMenuContainer = styled.div<{
   calcOpened: boolean;
   contactOpened: boolean;
 }>`
+  transform-origin: center; // For JS animations
+
   background: #fff;
   border-radius: ${navigationMenuContainerBorderRadius}px;
 

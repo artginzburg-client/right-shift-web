@@ -26,6 +26,8 @@ import {
   CalculatorSection,
 } from '../CalculatorSection/CalculatorSection';
 import { ContentSheetParsed } from '~/app/utils/getSheet';
+import { buildCssTransform } from '~/tools/buildCssTransform';
+import { getIsTouchScreenDevice } from '~/tools/isTouchScreenDevice';
 
 const navigationMenuId = 'primary-navigation';
 export function NavigationMenuComponent({
@@ -182,6 +184,97 @@ function NavigationMenu({
     about: 'about us',
   };
 
+  const isTouchScreenDevice = getIsTouchScreenDevice();
+  const animationProps: Pick<
+    Parameters<typeof NavigationMenuContainer>[0],
+    'onMouseMove' | 'onMouseDown' | 'onMouseLeave'
+  > = {
+    onMouseMove(event) {
+      if (isTouchScreenDevice) return;
+
+      const currentAnimations = event.currentTarget.getAnimations();
+      if (
+        currentAnimations.length > 5 &&
+        !currentAnimations[0].pending &&
+        !(currentAnimations[0] instanceof CSSTransition)
+      ) {
+        currentAnimations[0].reverse();
+      }
+
+      const elementPos = event.currentTarget.getBoundingClientRect();
+
+      const mousePositionOnElement = {
+        x: event.clientX - elementPos.left,
+        y: event.clientY - elementPos.top,
+      };
+      const elementCenter = {
+        x: elementPos.width / 2,
+        y: elementPos.height / 2,
+      };
+      const mousePositionFromCenter = {
+        x: elementCenter.x - mousePositionOnElement.x,
+        y: elementCenter.y - mousePositionOnElement.y,
+      };
+
+      const perspective = '500px';
+      const delta = 80;
+
+      const absoluteDistanceFromCenter =
+        Math.abs(mousePositionFromCenter.x) + Math.abs(mousePositionFromCenter.y);
+
+      event.currentTarget.animate(
+        {
+          transform: [
+            buildCssTransform({
+              perspective,
+              rotateX: `${mousePositionFromCenter.y / delta}deg`,
+              rotateY: `${-mousePositionFromCenter.x / delta}deg`,
+              translateX: `${(-mousePositionFromCenter.x / delta) * 4}px`,
+              translateY: `${(-mousePositionFromCenter.y / delta) * 4}px`,
+              rotateZ: `${mousePositionFromCenter.x / delta / 2}deg`,
+            }),
+          ],
+        },
+        {
+          duration: 4000 + absoluteDistanceFromCenter * 10,
+          fill: 'both',
+          easing: 'ease',
+        },
+      );
+    },
+    onMouseDown(event) {
+      const animation = event.currentTarget.animate(
+        {
+          transform: ['scale(0.985)'],
+        },
+        {
+          duration: 250,
+          fill: 'both',
+          easing: 'ease',
+          composite: 'accumulate',
+        },
+      );
+      setTimeout(() => {
+        animation.updatePlaybackRate(0.5);
+        animation.reverse();
+      }, 300);
+    },
+    onMouseLeave(event) {
+      if (isTouchScreenDevice) return;
+
+      event.currentTarget.animate(
+        {
+          transform: ['none'],
+        },
+        {
+          duration: 1000,
+          fill: 'both',
+          easing: 'ease',
+        },
+      );
+    },
+  };
+
   return (
     <NavigationMenuOuterContainer
       onMouseEnter={() => {
@@ -193,6 +286,7 @@ function NavigationMenu({
         calcOpened={openedSection === 'calc'}
         contactOpened={openedSection === 'contact'}
         id={navigationMenuId}
+        {...animationProps}
       >
         {!openedSection && (
           <>
