@@ -32,6 +32,7 @@ export const getSheet = cache(
     try {
       const result = await fetch(
         `https://docs.google.com/spreadsheets/d/${id}/export?format=tsv${gid ? `&gid=${gid}` : ''}`,
+        { next: { tags: [`sheet${id}`] } },
       );
       const text = await result.text();
       const parsed = parseTsv<ContentSheetParsed>(text);
