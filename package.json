@@ -2,6 +2,11 @@
   "name": "right-shift-web",
   "version": "0.1.0",
   "private": true,
+  "author": {
+    "name": "Art Ginzburg",
+    "email": "ginzburg.arthur@gmail.com",
+    "url": "https://ginzburg.art"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
