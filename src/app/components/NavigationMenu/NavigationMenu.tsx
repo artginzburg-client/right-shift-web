@@ -171,10 +171,10 @@ function NavigationMenu({
 } & { contentSheet: ContentSheetParsed }) {
   const iconSizePx = 30;
 
-  const socials: { href: string; Icon: IconType }[] = [
-    { href: contentSheet.Socials.Instagram, Icon: FaInstagram },
-    { href: contentSheet.Socials.LinkedIn, Icon: FaLinkedinIn },
-    { href: contentSheet.Socials.Telegram, Icon: FaTelegram },
+  const socials: { href: string; Icon: IconType; title: string }[] = [
+    { href: contentSheet.Socials.Instagram, Icon: FaInstagram, title: 'Instagram' },
+    { href: contentSheet.Socials.LinkedIn, Icon: FaLinkedinIn, title: 'LinkedIn' },
+    { href: contentSheet.Socials.Telegram, Icon: FaTelegram, title: 'Telegram' },
   ];
 
   const sectionTitles: Record<NavigationSection, string> = {
@@ -320,10 +320,12 @@ function NavigationMenu({
                 </li>
               </NavigationMenuContactList>
               <NavigationMenuSocialList>
-                {socials.map(({ href, Icon }) => (
-                  <Link key={href} href={`https://${href}`} {...newTab}>
-                    <Icon size={iconSizePx} />
-                  </Link>
+                {socials.map(({ href, Icon, title }) => (
+                  <li key={href}>
+                    <Link href={`https://${href}`} title={title} aria-label={title} {...newTab}>
+                      <Icon size={iconSizePx} />
+                    </Link>
+                  </li>
                 ))}
               </NavigationMenuSocialList>
             </NavigationMenuLinksContainer>

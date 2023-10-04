@@ -318,9 +318,12 @@ export const NavigationMenuSocialList = styled.ul`
   flex-direction: column;
   row-gap: 10px;
 
-  > a {
-    ${reset.a}
+  > li {
     font-size: 0; // remove the phantom offset.
+  }
+
+  a {
+    ${reset.a}
 
     transition: color 0.3s ease-in-out;
 
