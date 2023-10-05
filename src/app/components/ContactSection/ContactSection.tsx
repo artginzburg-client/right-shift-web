@@ -15,6 +15,7 @@ import { useDelayedAutofocus } from '~/hooks/useDelayedAutofocus';
 import { usePreventClosingWindowWhileSending } from '~/hooks/usePreventClosingWindowWhileSending';
 import { CircleButton } from '../ui/CircleButton/CircleButton';
 import { ArrowRightIcon } from '../ui/ArrowRightIcon';
+import { fetchRoute } from '~/app/utils/fetchRoute';
 
 /** @todo Error Handling */
 export function ContactSection() {
@@ -28,7 +29,7 @@ export function ContactSection() {
   async function sendContactForm(contact: string, text: string) {
     setIsSending(true);
     try {
-      const result = await fetch(`${window.location.origin}/api/contact`, {
+      const result = await fetchRoute('/api/contact', {
         method: 'POST',
         body: JSON.stringify({
           contact,
