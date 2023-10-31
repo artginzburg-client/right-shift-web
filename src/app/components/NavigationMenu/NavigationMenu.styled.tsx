@@ -249,7 +249,6 @@ export const NavigationMenuNav = styled.nav`
     font-weight: 400;
     /* line-height: 0px; 0% */
     letter-spacing: 0.56px;
-    text-decoration-line: underline;
 
     position: relative;
     &::before {
@@ -273,6 +272,14 @@ export const NavigationMenuNav = styled.nav`
       &::before {
         transform: translateY(-50%) scale(0.5);
       }
+      > span {
+        transform: translateX(15px);
+      }
+    }
+    > span {
+      display: inline-block;
+      text-decoration-line: underline;
+      transition: transform 0.3s ${easings.easeOutBack};
     }
 
     &:active {

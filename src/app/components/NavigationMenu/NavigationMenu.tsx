@@ -306,7 +306,7 @@ function NavigationMenu({
                     history.pushState(null, '', `#${section}`); // Feature: hashchange navigation
                   }}
                 >
-                  {sectionTitles[section]}
+                  <span>{sectionTitles[section]}</span>
                 </Link>
               ))}
             </NavigationMenuNav>
