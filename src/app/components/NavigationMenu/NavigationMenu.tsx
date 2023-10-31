@@ -153,7 +153,7 @@ function NavigationMenuPrimaryButtonComponent({
           ? target.parentElement!
           : target;
       setIsDot(
-        actualTarget.className.includes('NavigationMenuPrimaryButton')
+        actualTarget.className === NavigationMenuPrimaryButton.__linaria.className
           ? false
           : ['A', 'BUTTON'].some((value) => actualTarget.tagName === value),
       );
