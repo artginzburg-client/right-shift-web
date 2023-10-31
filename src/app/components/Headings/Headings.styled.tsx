@@ -32,6 +32,7 @@ export const Subheading = styled.p`
   }
 `;
 const rotatingWordsAnimationDuration = 5;
+/** @todo de-hardcode */
 const rotatingWordsQuantity = 3;
 /** @todo make it `-rotatingWordsAnimationDuration / rotatingWordsQuantity` */
 const rotatingWordsSharedAnimationDelay = -1.7; // -5 / 3

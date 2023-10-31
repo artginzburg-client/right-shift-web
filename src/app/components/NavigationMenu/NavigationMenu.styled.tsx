@@ -163,6 +163,7 @@ export const NavigationMenuPrimaryButton = styled.button`
     transform: rotate(-0.5turn);
     --line-scale: 1.05;
     > svg > g:nth-of-type(1) {
+      /* Cross */
       > line:nth-of-type(1) {
         transform: translateX(-7.5px) translateY(7.5px) rotateZ(45deg)
           scaleX(var(--line-scale, 1.05));
@@ -181,10 +182,39 @@ export const NavigationMenuPrimaryButton = styled.button`
     }
 
     transition-delay: 0.25s;
+
+    //#region Feature: NavigationMenuPrimaryButton turn icon to dot
+    > svg > circle {
+      transition: r 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+      will-change: r;
+    }
+    &[data-is-dot='true'] {
+      --line-scale: 0.15; // This turns cross into a dot
+
+      transition-delay: 0s;
+      transition-duration: 0.3s;
+      transition-timing-function: ${easings.easeOutBack};
+
+      > svg {
+        > g {
+          > line,
+          > path {
+            transition-delay: 0.05s;
+            transition-duration: 0.1s;
+          }
+        }
+        > circle {
+          // object instead of CSS to suppress the warning about "r" not being a valid property.
+          ${{ r: `${24.25 * 0.85}px` }}
+        }
+      }
+    }
+    //#endregion
   }
 
   &[data-has-opened-section='true'] {
     > svg > g:nth-of-type(1) {
+      /* Turn cross into arrow while fading it away */
       > line:nth-of-type(1) {
         transform: translateX(1.75px) translateY(-9px) rotateZ(-180deg) scaleX(0);
         opacity: 0;
@@ -199,13 +229,44 @@ export const NavigationMenuPrimaryButton = styled.button`
       }
     }
     > svg > g:nth-of-type(2) {
+      /* Show the actual arrow */
       > path {
         opacity: 1;
       }
     }
+
+    //#region Feature: NavigationMenuPrimaryButton turn icon to dot
+    &[data-is-dot='true'] {
+      > svg > g:nth-of-type(1) {
+        /* Turn arrow into cross (which was already turned into a dot) */
+        > line:nth-of-type(1) {
+          transform: translateX(-7.5px) translateY(7.5px) rotateZ(45deg)
+            scaleX(var(--line-scale, 1.05));
+          opacity: 1;
+        }
+        > line:nth-of-type(2) {
+          transform: translateX(-0.5px) translateY(0.5px) rotateZ(45deg)
+            scaleX(var(--line-scale, 1.05));
+          opacity: 1;
+        }
+        > line:nth-of-type(3) {
+          transform: translateX(-6.5px) translateY(-6.5px) rotateZ(-45deg)
+            scaleX(var(--line-scale, 1.05));
+          opacity: 1;
+        }
+      }
+      > svg > g:nth-of-type(2) {
+        /* Hide arrow */
+        > path {
+          opacity: 0;
+        }
+      }
+    }
+    //#endregion
   }
 
   > svg > g:nth-of-type(1) {
+    /* Cross config */
     > line {
       transition: 0.5s ease-in-out;
       transition-property: transform, opacity;
@@ -214,6 +275,7 @@ export const NavigationMenuPrimaryButton = styled.button`
   }
 
   > svg > g:nth-of-type(2) {
+    /* Arrow config */
     > path {
       opacity: 0;
       transition: opacity 0.5s ease-in-out;

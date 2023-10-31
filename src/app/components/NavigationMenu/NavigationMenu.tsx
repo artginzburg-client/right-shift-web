@@ -88,7 +88,6 @@ export function NavigationMenuComponent({
       }
     }
   });
-  const primaryButtonVisibleKeyShortcut = isMenuOpened ? 'Escape' : 'Enter';
 
   return (
     <NavigationMenuComponentContainer
@@ -109,44 +108,14 @@ export function NavigationMenuComponent({
             }
       }
     >
-      <NavigationMenuPrimaryButton
-        aria-label="Menu"
-        aria-controls={navigationMenuId}
-        aria-expanded={isMenuOpened}
-        data-has-opened-section={!!openedSection}
-        onClick={() => {
-          if (calculatorSectionRef.current?.goStageBack()) return;
-
-          setOpenedSection(undefined);
-          window.location.hash = '';
-          // This disregards the trailing '#' in the window.location, which looked strange, especially when copied for social purposes. https://stackoverflow.com/a/49373716/11474669
-          history.replaceState(null, '', ' '); // Feature: hashchange navigation
-
-          if (!openedSection) {
-            setIsMenuOpened((prev) => {
-              if (prev) {
-                setWasJustClosed(true);
-              }
-              return !prev;
-            });
-          }
-        }}
-        aria-keyshortcuts={primaryButtonVisibleKeyShortcut}
-        title={`[${primaryButtonVisibleKeyShortcut}]`}
-      >
-        <svg
-          width="50"
-          height="50"
-          viewBox="0 0 50 50"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-hidden
-        >
-          <circle cx="25" cy="25" r="24.25" stroke="#fff" strokeWidth="1.5" />
-          <BurgerIcon />
-          <BackIcon />
-        </svg>
-      </NavigationMenuPrimaryButton>
+      <NavigationMenuPrimaryButtonComponent
+        openedSection={openedSection}
+        setOpenedSection={setOpenedSection}
+        isMenuOpened={isMenuOpened}
+        setIsMenuOpened={setIsMenuOpened}
+        calculatorSectionRef={calculatorSectionRef}
+        setWasJustClosed={setWasJustClosed}
+      />
 
       <NavigationMenu
         openedSection={openedSection}
@@ -158,6 +127,95 @@ export function NavigationMenuComponent({
     </NavigationMenuComponentContainer>
   );
 }
+
+/** Excluded to isolate re-renders due to frequently changing state */
+function NavigationMenuPrimaryButtonComponent({
+  openedSection,
+  setOpenedSection,
+  isMenuOpened,
+  setIsMenuOpened,
+  calculatorSectionRef,
+  setWasJustClosed,
+}: ReactStateRecord<'openedSection', NavigationSection | undefined> &
+  ReactStateRecord<'isMenuOpened', boolean> & {
+    calculatorSectionRef: React.RefObject<CalculatorSectionImperativeMethods>;
+  } & { setWasJustClosed: ReactStateSetter<boolean> }) {
+  //#region Feature: NavigationMenuPrimaryButton turn icon to dot
+  const [isDot, setIsDot] = useState(false);
+  useEventListener(
+    'mouseover',
+    (event) => {
+      const target = event.target as HTMLElement;
+      const actualTarget =
+        target.tagName === 'path' || target.tagName === 'line' || target.tagName === 'circle'
+          ? target.closest('svg')?.parentElement!
+          : target.tagName === 'SPAN' || target.tagName === 'svg' || target.tagName === 'IMG'
+          ? target.parentElement!
+          : target;
+      setIsDot(
+        actualTarget.className.includes('NavigationMenuPrimaryButton')
+          ? false
+          : ['A', 'BUTTON'].some((value) => actualTarget.tagName === value),
+      );
+    },
+    undefined,
+    { passive: true },
+  );
+  useEventListener(
+    'click',
+    () => {
+      setIsDot(false);
+    },
+    undefined,
+    { passive: true },
+  );
+  //#endregion
+
+  const primaryButtonVisibleKeyShortcut = isMenuOpened ? 'Escape' : 'Enter';
+
+  return (
+    <NavigationMenuPrimaryButton
+      aria-label="Menu"
+      aria-controls={navigationMenuId}
+      aria-expanded={isMenuOpened}
+      data-has-opened-section={!!openedSection}
+      data-is-dot={isDot}
+      onClick={() => {
+        if (calculatorSectionRef.current?.goStageBack()) return;
+
+        setOpenedSection(undefined);
+        window.location.hash = '';
+        // This disregards the trailing '#' in the window.location, which looked strange, especially when copied for social purposes. https://stackoverflow.com/a/49373716/11474669
+        history.replaceState(null, '', ' '); // Feature: hashchange navigation
+
+        if (!openedSection) {
+          setIsMenuOpened((prev) => {
+            if (prev) {
+              setWasJustClosed(true);
+            }
+            return !prev;
+          });
+        }
+      }}
+      aria-keyshortcuts={primaryButtonVisibleKeyShortcut}
+      title={`[${primaryButtonVisibleKeyShortcut}]`}
+    >
+      <svg
+        width="50"
+        height="50"
+        viewBox="0 0 50 50"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden
+      >
+        <circle cx="25" cy="25" r="24.25" stroke="#fff" strokeWidth="1.5" />
+        <BurgerIcon />
+        <BackIcon />
+      </svg>
+    </NavigationMenuPrimaryButton>
+  );
+}
+
 function NavigationMenu({
   openedSection,
   setOpenedSection,
