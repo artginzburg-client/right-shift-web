@@ -87,13 +87,13 @@ export function ContactSection() {
     >
       <ContactSectionTextarea
         ref={textareaRef}
-        placeholder="Lorem ipsum and so forth... We are humans. Please be nice"
+        placeholder='"Lorem ipsum" and so forth... We are humans. Please be nice'
         name="text"
         disabled={isSending}
       />
       <ContactSectionSendingInputContainer>
         <ContactSectionInput
-          placeholder="Your name / e-mail / link"
+          placeholder="Your name, e-mail, or link"
           name="contact"
           disabled={isSending}
         />
