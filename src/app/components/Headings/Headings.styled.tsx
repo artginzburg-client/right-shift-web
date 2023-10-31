@@ -31,9 +31,10 @@ export const Subheading = styled.p`
     font-size: 18px;
   }
 `;
-const rotatingWordsSharedAnimationDelay = -1.7;
 const rotatingWordsAnimationDuration = 5;
 const rotatingWordsQuantity = 3;
+/** @todo make it `-rotatingWordsAnimationDuration / rotatingWordsQuantity` */
+const rotatingWordsSharedAnimationDelay = -1.7; // -5 / 3
 
 export const RotatingWordsInSubheadingContainer = styled.span`
   display: inline-grid;
