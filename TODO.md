@@ -1,1 +1,2 @@
 - Separate `images` directory into `icons` and `images`.
+- Add sitemaps (probably txt and definitely xml)

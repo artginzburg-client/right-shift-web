@@ -123,7 +123,7 @@ export const CalculatorSectionDesiredOptionCheckbox = styled.input`
     background-color: #1e1e1e;
   }
 
-  &:focus {
+  &:focus-visible {
     border-width: 5px;
     &:checked {
       border-color: #fff;
