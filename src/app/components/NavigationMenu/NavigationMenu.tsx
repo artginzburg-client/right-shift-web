@@ -28,6 +28,7 @@ import {
 import { ContentSheetParsed } from '~/app/utils/getSheet';
 import { buildCssTransform } from '~/tools/buildCssTransform';
 import { getIsTouchScreenDevice } from '~/tools/isTouchScreenDevice';
+import { NavigationSection, navigationSections } from '../../config/navigationSections';
 
 const navigationMenuId = 'primary-navigation';
 export function NavigationMenuComponent({
@@ -397,5 +398,3 @@ function NavigationMenu({
     </NavigationMenuOuterContainer>
   );
 }
-export const navigationSections = ['work', 'calc', 'contact', 'about'] as const;
-export type NavigationSection = (typeof navigationSections)[number];

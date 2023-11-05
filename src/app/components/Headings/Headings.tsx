@@ -8,7 +8,7 @@ import {
   SubheadingSpan,
 } from './Headings.styled';
 import { useEventListener } from 'usehooks-ts';
-import { NavigationSection } from '../NavigationMenu/NavigationMenu';
+import { NavigationSection } from '../../config/navigationSections';
 
 export function Headings({
   isMenuOpened,

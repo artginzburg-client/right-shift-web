@@ -2,11 +2,8 @@
 import { useState } from 'react';
 import { Main } from '../page.styled';
 import { Headings } from './Headings/Headings';
-import {
-  NavigationSection,
-  NavigationMenuComponent,
-  navigationSections,
-} from './NavigationMenu/NavigationMenu';
+import { NavigationMenuComponent } from './NavigationMenu/NavigationMenu';
+import { NavigationSection, navigationSections } from '../config/navigationSections';
 import { useOnMounted } from '~/hooks/useOnMounted';
 import { ReactStateSetter } from '~/tools/reactTypeHelpers';
 import { ContentSheetParsed } from '../utils/getSheet';
