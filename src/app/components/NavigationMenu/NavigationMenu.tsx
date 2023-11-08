@@ -1,22 +1,16 @@
 'use client';
 import { useRef, useState } from 'react';
-import { FaInstagram, FaLinkedinIn, FaTelegram } from 'react-icons/fa';
 import {
   NavigationMenuComponentContainer,
-  NavigationMenuContactList,
   NavigationMenuContainer,
-  NavigationMenuLinksContainer,
   NavigationMenuNav,
   NavigationMenuOuterContainer,
   NavigationMenuPrimaryButton,
-  NavigationMenuSocialList,
 } from './NavigationMenu.styled';
 import Link from 'next/link';
 import BurgerIcon from '~/images/burger';
 import BackIcon from '~/images/back';
-import { IconType } from 'react-icons/lib';
 import { useEventListener } from 'usehooks-ts';
-import { linkBuilders, newTab } from '~/tools/linkHelpers';
 import { ReactStateRecord, ReactStateSetter } from '~/tools/reactTypeHelpers';
 import { AboutSection } from '../AboutSection';
 import { ContactSection } from '../ContactSection/ContactSection';
@@ -25,7 +19,6 @@ import {
   CalculatorSectionImperativeMethods,
   CalculatorSection,
 } from '../CalculatorSection/CalculatorSection';
-import { ContentSheetParsed } from '~/app/utils/getSheet';
 import { buildCssTransform } from '~/tools/buildCssTransform';
 import { getIsTouchScreenDevice } from '~/tools/isTouchScreenDevice';
 import { NavigationSection, navigationSections } from '../../config/navigationSections';
@@ -36,9 +29,9 @@ export function NavigationMenuComponent({
   setOpenedSection,
   isMenuOpened,
   setIsMenuOpened,
-  contentSheet,
+  navigationMenuLinksElement,
 }: ReactStateRecord<'openedSection', NavigationSection | undefined> &
-  ReactStateRecord<'isMenuOpened', boolean> & { contentSheet: ContentSheetParsed }) {
+  ReactStateRecord<'isMenuOpened', boolean> & { navigationMenuLinksElement: JSX.Element }) {
   /** wasJustClosed is designed to prevent the :hover effects from actuating if the user clicks the close button without moving the cursor in Safari. */
   const [wasJustClosed, setWasJustClosed] = useState(false);
 
@@ -123,7 +116,7 @@ export function NavigationMenuComponent({
         setOpenedSection={setOpenedSection}
         setIsMenuOpened={setIsMenuOpened}
         calculatorSectionRef={calculatorSectionRef}
-        contentSheet={contentSheet}
+        navigationMenuLinksElement={navigationMenuLinksElement}
       />
     </NavigationMenuComponentContainer>
   );
@@ -222,20 +215,12 @@ function NavigationMenu({
   setOpenedSection,
   setIsMenuOpened,
   calculatorSectionRef,
-  contentSheet,
+  navigationMenuLinksElement,
 }: ReactStateRecord<'openedSection', NavigationSection | undefined> & {
   setIsMenuOpened: ReactStateSetter<boolean>;
 } & {
   calculatorSectionRef: React.RefObject<CalculatorSectionImperativeMethods>;
-} & { contentSheet: ContentSheetParsed }) {
-  const iconSizePx = 30;
-
-  const socials: { href: string; Icon: IconType; title: string }[] = [
-    { href: contentSheet.Socials.Instagram, Icon: FaInstagram, title: 'Instagram' },
-    { href: contentSheet.Socials.LinkedIn, Icon: FaLinkedinIn, title: 'LinkedIn' },
-    { href: contentSheet.Socials.Telegram, Icon: FaTelegram, title: 'Telegram' },
-  ];
-
+} & { navigationMenuLinksElement: JSX.Element }) {
   const sectionTitles: Record<NavigationSection, string> = {
     work: 'our work',
     calc: 'calculate price',
@@ -369,25 +354,7 @@ function NavigationMenu({
                 </Link>
               ))}
             </NavigationMenuNav>
-            <NavigationMenuLinksContainer>
-              <NavigationMenuContactList>
-                <li>
-                  <Link {...linkBuilders.tel(contentSheet.Contacts.Phone)} />
-                </li>
-                <li>
-                  <Link {...linkBuilders.mailto(contentSheet.Contacts.Email)} />
-                </li>
-              </NavigationMenuContactList>
-              <NavigationMenuSocialList>
-                {socials.map(({ href, Icon, title }) => (
-                  <li key={href}>
-                    <Link href={`https://${href}`} title={title} aria-label={title} {...newTab}>
-                      <Icon size={iconSizePx} />
-                    </Link>
-                  </li>
-                ))}
-              </NavigationMenuSocialList>
-            </NavigationMenuLinksContainer>
+            {navigationMenuLinksElement}
           </>
         )}
         {openedSection === 'work' && <WorkSection />}

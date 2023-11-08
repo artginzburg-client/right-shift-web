@@ -6,9 +6,12 @@ import { NavigationMenuComponent } from './NavigationMenu/NavigationMenu';
 import { NavigationSection, navigationSections } from '../config/navigationSections';
 import { useOnMounted } from '~/hooks/useOnMounted';
 import { ReactStateSetter } from '~/tools/reactTypeHelpers';
-import { ContentSheetParsed } from '../utils/getSheet';
 
-export function HomeClient({ contentSheet }: { contentSheet: ContentSheetParsed }) {
+export function HomeClient({
+  navigationMenuLinksElement,
+}: {
+  navigationMenuLinksElement: JSX.Element;
+}) {
   const [openedSection, setOpenedSection] = useState<NavigationSection>();
   const [isMenuOpened, setIsMenuOpened] = useState(false);
 
@@ -22,7 +25,7 @@ export function HomeClient({ contentSheet }: { contentSheet: ContentSheetParsed 
         setOpenedSection={setOpenedSection}
         isMenuOpened={isMenuOpened}
         setIsMenuOpened={setIsMenuOpened}
-        contentSheet={contentSheet}
+        navigationMenuLinksElement={navigationMenuLinksElement}
       />
     </Main>
   );
