@@ -32,8 +32,12 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install dependencies
-        uses: bahmutov/npm-install@v1
+      - name: Install pnpm
+        run: npm i -g pnpm
+
+      - name: Install dependencies (development)
+        # It automatically lints before building, so devDependencies are required.
+        run: pnpm i
 
       # If pnpm is used, you need to switch the previous step with the following one. pnpm does not create a package-lock.json
       # so the step above will fail to pull dependencies
