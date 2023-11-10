@@ -1,17 +1,16 @@
 import { cache } from 'react';
 import 'server-only';
 
-const sheetConfig = {
+export const sheetConfig = {
   fallback: {
     Contacts: {
       Phone: '+31 6 45 10 65 69',
-      Email: 'right.shift@gmail.com',
-      Another: 'Shit',
+      Email: 'sales.right.shift@gmail.com',
     },
     Socials: {
-      Instagram: 'www.instagram.com/art.ginzburg/',
+      Instagram: 'www.instagram.com/right.shift',
       LinkedIn: 'www.linkedin.com/company/right-shift-dev',
-      Telegram: 't.me/ginzart',
+      Telegram: 't.me/leokruglikov',
     },
   } as ContentSheetParsed,
 };

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.linaria.global';
 import localFont from 'next/font/local';
 import { Attribution } from './components/Attribution';
+import { sheetConfig } from './utils/getSheet';
 
 const { CANONICAL_HOST } = process.env;
 const metadataBase = CANONICAL_HOST ? new URL(`https://${CANONICAL_HOST}`) : undefined;
@@ -25,6 +26,7 @@ const gTEestiProDisplay = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase,
   title: 'right.shift',
   description: 'creating digital products tailored for you',
   openGraph: {
@@ -32,11 +34,20 @@ export const metadata: Metadata = {
     title: 'right.shift',
     description: 'digital products tailored for you',
     url: metadataBase,
+    siteName: 'right.shift',
+    locale: 'en_US',
+    emails: sheetConfig.fallback.Contacts.Email,
+    phoneNumbers: sheetConfig.fallback.Contacts.Phone,
   },
-  metadataBase,
   alternates: {
     canonical: metadataBase,
   },
+  authors: [
+    { name: 'Arthur Ginzburg', url: 'https://ginzburg.art' },
+    { name: 'Gabriel', url: 'https://jj-dsgn.com' },
+  ],
+  creator: 'Art Ginzburg',
+  category: 'Web Studio',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
