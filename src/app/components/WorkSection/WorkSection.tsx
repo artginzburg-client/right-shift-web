@@ -13,7 +13,12 @@ import nextIconSrc from '~/images/next.svg';
 import { newTab } from '~/tools/linkHelpers';
 
 export function WorkSection() {
-  const works: { imgSrc: string | StaticImageData; aHref: string; title: string }[] = [
+  function generateWorksWithTypes<
+    T extends { imgSrc: string | StaticImageData; aHref: string; title: string },
+  >(works: readonly T[]) {
+    return works;
+  }
+  const works = generateWorksWithTypes([
     {
       imgSrc: nfoTokenImage,
       aHref: 'https://nfotoken.com',
@@ -34,7 +39,8 @@ export function WorkSection() {
       aHref: 'https://concerts.kryshi-i-vyshe.ru',
       title: 'Kryshe i Vyshe',
     },
-  ];
+  ] as const);
+
   return (
     <WorkSectionContainer>
       {works.map(({ imgSrc, aHref, title }) => (

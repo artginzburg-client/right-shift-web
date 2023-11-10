@@ -3,7 +3,8 @@ const withLinaria = require('next-with-linaria')
 /** @type {import('next-with-linaria').LinariaConfig} */
 const nextConfig = {
   experimental: {
-    webpackBuildWorker: true
+    webpackBuildWorker: true,
+    typedRoutes: true
   }
 }
 

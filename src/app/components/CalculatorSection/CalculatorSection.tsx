@@ -21,6 +21,7 @@ import { ArrowRightIcon } from '../ui/ArrowRightIcon';
 import { CircleButton } from '../ui/CircleButton/CircleButton';
 import { ArrowButton } from '../ui/ArrowButton/ArrowButton';
 import { ArrowButtonElementStickyOnSmallHeight } from '../ui/ArrowButton/ArrowButton.styled';
+import { fetchRoute } from '~/app/utils/fetchRoute';
 
 export interface CalculatorSectionImperativeMethods {
   /** @returns whether to prevent closing the NavigationMenu. */
@@ -70,7 +71,7 @@ export const CalculatorSection = forwardRef<CalculatorSectionImperativeMethods>(
       });
     }
 
-    const result = await fetch(`${window.location.origin}/api/calculator`, {
+    const result = await fetchRoute('/api/calculator', {
       method: 'POST',
       body: JSON.stringify({
         email,
