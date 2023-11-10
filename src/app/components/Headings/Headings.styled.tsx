@@ -31,12 +31,19 @@ export const Subheading = styled.p`
     font-size: 18px;
   }
 `;
-const rotatingWordsAnimationDuration = 5;
+const oneRotatingWordAnimationDuration = 5 / 3;
 /** @todo de-hardcode */
 const rotatingWordsQuantity = 3;
+const rotatingWordsAnimationDuration = oneRotatingWordAnimationDuration * rotatingWordsQuantity;
 /** If this is 0, the animation will start from blank to appear. If positive — the appearance from blank will take longer. If negative — decreases the blank time to the point there's no blank at all. */
 const rotatingWordsSharedAnimationDelay =
   (-rotatingWordsAnimationDuration / rotatingWordsQuantity) * 0.57;
+
+const percentsNeededToHideAndWaitWhileOtherLettersRotate = 15 * rotatingWordsQuantity;
+const keyframeOfHideStart = 100 - percentsNeededToHideAndWaitWhileOtherLettersRotate;
+const keyframeOfHideStartString = `${keyframeOfHideStart}%`;
+const keyframeOfAppearFinishString = `${keyframeOfHideStart / 2.2}%`;
+const keyframeOfStayFinishString = `${keyframeOfHideStart * (7 / 11)}%`;
 
 export const RotatingWordsInSubheadingContainer = styled.span`
   display: inline-grid;
@@ -71,14 +78,14 @@ export const RotatingWordsInSubheadingContainer = styled.span`
       transform: scaleY(0);
       transform-origin: bottom;
     }
-    25% {
+    ${keyframeOfAppearFinishString} {
       transform: scaleY(1);
     }
-    35% {
+    ${keyframeOfStayFinishString} {
       transform: scaleY(1);
       transform-origin: top;
     }
-    55%,
+    ${keyframeOfHideStartString},
     to {
       transform: scaleY(0);
     }
