@@ -34,8 +34,9 @@ export const Subheading = styled.p`
 const rotatingWordsAnimationDuration = 5;
 /** @todo de-hardcode */
 const rotatingWordsQuantity = 3;
-/** @todo make it `-rotatingWordsAnimationDuration / rotatingWordsQuantity` */
-const rotatingWordsSharedAnimationDelay = -1.7; // -5 / 3
+/** If this is 0, the animation will start from blank to appear. If positive — the appearance from blank will take longer. If negative — decreases the blank time to the point there's no blank at all. */
+const rotatingWordsSharedAnimationDelay =
+  (-rotatingWordsAnimationDuration / rotatingWordsQuantity) * 0.57;
 
 export const RotatingWordsInSubheadingContainer = styled.span`
   display: inline-grid;
@@ -43,7 +44,7 @@ export const RotatingWordsInSubheadingContainer = styled.span`
 
   > span {
     animation: topToBottom ${rotatingWordsAnimationDuration}s ease-in-out infinite
-      ${0 + rotatingWordsSharedAnimationDelay}s;
+      ${rotatingWordsSharedAnimationDelay}s;
     transform: scaleY(0);
 
     &:not(:first-child) {
@@ -66,20 +67,19 @@ export const RotatingWordsInSubheadingContainer = styled.span`
   }
 
   @keyframes topToBottom {
-    0%,
-    15% {
+    from {
       transform: scaleY(0);
       transform-origin: bottom;
     }
-    40% {
+    25% {
       transform: scaleY(1);
     }
-    50% {
+    35% {
       transform: scaleY(1);
       transform-origin: top;
     }
-    70%,
-    100% {
+    55%,
+    to {
       transform: scaleY(0);
     }
   }
