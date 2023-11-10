@@ -9,14 +9,15 @@ import {
 } from './NavigationMenu/NavigationMenu.styled';
 
 import { linkBuilders, newTab } from '~/tools/linkHelpers';
-import { getSheet, type ContentSheetParsed } from '~/app/utils/getSheet';
+import { getSheet, type ContentSheetParsed, sheetConfig } from '~/app/utils/getSheet';
 
-const { CONTENT_SHEET_ID } = process.env;
+const { CONTENT_SHEET_ID, NODE_ENV } = process.env;
 
 /** This can technically be used with `Suspense`, but it's already really fast and cached. There's no point in optimizing without measuring, so I'll probably run some tests with and without `Suspense` later to determine if it should be used. */
 export async function NavigationMenuLinksServer() {
-  if (!CONTENT_SHEET_ID) throw new Error('CONTENT_SHEET_ID environment variable not present');
-  const contentSheet = await getSheet(CONTENT_SHEET_ID);
+  if (!CONTENT_SHEET_ID && NODE_ENV !== 'test')
+    throw new Error('CONTENT_SHEET_ID environment variable not present');
+  const contentSheet = CONTENT_SHEET_ID ? await getSheet(CONTENT_SHEET_ID) : sheetConfig.fallback;
 
   return <NavigationMenuLinks contentSheet={contentSheet} />;
 }
