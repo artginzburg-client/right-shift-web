@@ -38,6 +38,7 @@ export function prepareMarkdownForTelegram(markdown: string) {
 }
 
 function validateTelegramIntegrationOrThrow() {
+  console.log('NODE_ENV', NODE_ENV);
   if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
     throw new Error('Telegram integration is not configured in the environment variables!');
   }
