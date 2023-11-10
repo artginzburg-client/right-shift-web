@@ -29,6 +29,9 @@ export const metadata: Metadata = {
     title: 'right.shift',
     description: 'digital products tailored for you',
   },
+  metadataBase: process.env.CANONICAL_HOST
+    ? new URL(`https://${process.env.CANONICAL_HOST}`)
+    : null,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
