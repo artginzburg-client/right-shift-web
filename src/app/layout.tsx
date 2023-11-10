@@ -3,6 +3,9 @@ import './globals.linaria.global';
 import localFont from 'next/font/local';
 import { Attribution } from './components/Attribution';
 
+const { CANONICAL_HOST } = process.env;
+const metadataBase = CANONICAL_HOST ? new URL(`https://${CANONICAL_HOST}`) : undefined;
+
 const gTEestiProDisplay = localFont({
   src: [
     {
@@ -28,10 +31,12 @@ export const metadata: Metadata = {
     type: 'website',
     title: 'right.shift',
     description: 'digital products tailored for you',
+    url: metadataBase,
   },
-  metadataBase: process.env.CANONICAL_HOST
-    ? new URL(`https://${process.env.CANONICAL_HOST}`)
-    : null,
+  metadataBase,
+  alternates: {
+    canonical: metadataBase,
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
