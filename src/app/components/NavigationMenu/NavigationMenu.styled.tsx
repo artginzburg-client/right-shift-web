@@ -8,6 +8,8 @@ export const NavigationMenuOuterContainer = styled.div`
   position: absolute;
   left: 100%;
 
+  perspective: 500px;
+
   ${media.mobileStyle} {
     bottom: 100%;
     left: unset;
@@ -56,8 +58,8 @@ export const NavigationMenuContainer = styled.div<{
     props.calcOpened
       ? `${navigationMenuContainerPaddingInCalc}px`
       : props.workOpened
-      ? '5px'
-      : '50px 40px'};
+        ? '5px'
+        : '50px 40px'};
 
   display: flex;
   flex-direction: column;

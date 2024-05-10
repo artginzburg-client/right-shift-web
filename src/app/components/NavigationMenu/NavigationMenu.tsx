@@ -22,6 +22,7 @@ import {
 import { buildCssTransform } from '~/tools/buildCssTransform';
 import { getIsTouchScreenDevice } from '~/tools/isTouchScreenDevice';
 import { NavigationSection, navigationSections } from '../../config/navigationSections';
+import gsap from 'gsap';
 
 const navigationMenuId = 'primary-navigation';
 export function NavigationMenuComponent({
@@ -144,8 +145,8 @@ function NavigationMenuPrimaryButtonComponent({
         target.tagName === 'path' || target.tagName === 'line' || target.tagName === 'circle'
           ? target.closest('svg')?.parentElement!
           : target.tagName === 'SPAN' || target.tagName === 'svg' || target.tagName === 'IMG'
-          ? target.parentElement!
-          : target;
+            ? target.parentElement!
+            : target;
       setIsDot(
         actualTarget.className === NavigationMenuPrimaryButton.__linaria.className
           ? false
@@ -236,16 +237,8 @@ function NavigationMenu({
     onMouseMove(event) {
       if (isTouchScreenDevice) return;
 
-      const currentAnimations = event.currentTarget.getAnimations();
-      if (
-        currentAnimations.length > 5 &&
-        !currentAnimations[0].pending &&
-        !(currentAnimations[0] instanceof CSSTransition)
-      ) {
-        currentAnimations[0].reverse();
-      }
-
-      const elementPos = event.currentTarget.getBoundingClientRect();
+      const element = event.currentTarget;
+      const elementPos = element.getBoundingClientRect();
 
       const mousePositionOnElement = {
         x: event.clientX - elementPos.left,
@@ -260,62 +253,51 @@ function NavigationMenu({
         y: elementCenter.y - mousePositionOnElement.y,
       };
 
-      const perspective = '500px';
       const delta = 80;
+      const timeline = gsap.timeline();
 
       const absoluteDistanceFromCenter =
         Math.abs(mousePositionFromCenter.x) + Math.abs(mousePositionFromCenter.y);
 
-      event.currentTarget.animate(
-        {
-          transform: [
-            buildCssTransform({
-              perspective,
-              rotateX: `${mousePositionFromCenter.y / delta}deg`,
-              rotateY: `${-mousePositionFromCenter.x / delta}deg`,
-              translateX: `${(-mousePositionFromCenter.x / delta) * 4}px`,
-              translateY: `${(-mousePositionFromCenter.y / delta) * 4}px`,
-              rotateZ: `${mousePositionFromCenter.x / delta / 2}deg`,
-            }),
-          ],
-        },
-        {
-          duration: 4000 + absoluteDistanceFromCenter * 10,
-          fill: 'both',
-          easing: 'ease',
-        },
-      );
+      timeline.to(element, {
+        duration: 4 + absoluteDistanceFromCenter * 0.01,
+        rotationX: `${mousePositionFromCenter.y / delta}deg`,
+        rotationY: `${-mousePositionFromCenter.x / delta}deg`,
+        x: `${(-mousePositionFromCenter.x / delta) * 4}px`,
+        y: `${(-mousePositionFromCenter.y / delta) * 4}px`,
+        rotationZ: `${mousePositionFromCenter.x / delta / 2}deg`,
+
+        ease: 'power3',
+      });
     },
     onMouseDown(event) {
-      const animation = event.currentTarget.animate(
-        {
-          transform: ['scale(0.985)'],
-        },
-        {
-          duration: 250,
-          fill: 'both',
-          easing: 'ease',
-          composite: 'accumulate',
-        },
-      );
+      const timeline = gsap.timeline();
+
+      const element = event.currentTarget;
+      gsap.killTweensOf(element);
+      timeline.to(element, {
+        duration: 0.25,
+        scale: 0.985,
+      });
+
       setTimeout(() => {
-        animation.updatePlaybackRate(0.5);
-        animation.reverse();
+        timeline.duration(0.5);
+        timeline.reverse();
       }, 300);
     },
     onMouseLeave(event) {
       if (isTouchScreenDevice) return;
 
-      event.currentTarget.animate(
-        {
-          transform: ['none'],
-        },
-        {
-          duration: 1000,
-          fill: 'both',
-          easing: 'ease',
-        },
-      );
+      const timeline = gsap.timeline();
+
+      const element = event.currentTarget;
+      gsap.killTweensOf(element);
+      timeline.to(element, {
+        duration: 1,
+        scaleX: 1,
+        scaleY: 1,
+        transform: 'none',
+      });
     },
   };
 
