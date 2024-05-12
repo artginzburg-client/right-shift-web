@@ -1,5 +1,5 @@
 'use client';
-import { forwardRef, useImperativeHandle, useState } from 'react';
+import { Fragment, forwardRef, useImperativeHandle, useState } from 'react';
 import {
   CalculatorSectionDesiredOptionCheckbox,
   CalculatorSectionDesiredOptionLabel,
@@ -110,7 +110,7 @@ export const CalculatorSection = forwardRef<CalculatorSectionImperativeMethods>(
       return (
         <CalculatorSectionArrowButtonsContainer>
           {possibleAnswers.map((possibleAnswer, possibleAnswerIndex, arr) => (
-            <>
+            <Fragment key={possibleAnswer}>
               <ArrowButton
                 key={possibleAnswer}
                 onClick={() => {
@@ -121,7 +121,7 @@ export const CalculatorSection = forwardRef<CalculatorSectionImperativeMethods>(
                 {possibleAnswer}
               </ArrowButton>
               {possibleAnswerIndex !== arr.length - 1 && <CalculatorSectionSeparator />}
-            </>
+            </Fragment>
           ))}
         </CalculatorSectionArrowButtonsContainer>
       );
