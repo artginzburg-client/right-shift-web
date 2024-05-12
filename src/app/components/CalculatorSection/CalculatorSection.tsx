@@ -271,8 +271,8 @@ export const CalculatorSection = forwardRef<CalculatorSectionImperativeMethods>(
             ? hourWeightOfQuestion
             : 0
           : question.type === 'string'
-          ? (hourWeightOfQuestion as number[])[answerIndex!]
-          : (questionAnswerRaw as string[]).length * (hourWeightOfQuestion as number);
+            ? (hourWeightOfQuestion as number[])[answerIndex!]
+            : (questionAnswerRaw as string[]).length * (hourWeightOfQuestion as number);
 
       return hourWeightOfAnswer as number;
     });
@@ -375,7 +375,7 @@ export const CalculatorSection = forwardRef<CalculatorSectionImperativeMethods>(
             return true;
           }
         },
-      } as CalculatorSectionImperativeMethods),
+      }) as CalculatorSectionImperativeMethods,
   );
 
   const CurrentStage = stages[calcStage];
