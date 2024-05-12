@@ -164,7 +164,7 @@ export const CalculatorSection = forwardRef<CalculatorSectionImperativeMethods>(
     subject: {
       type: 'string',
       title: 'What do you need to develop?',
-      choice: ['Landing page', 'Website CMS', 'Application'],
+      choice: ['Landing page', 'Website', 'Application'],
       generator: generateAnswers.string,
     },
     design: {
