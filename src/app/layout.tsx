@@ -59,6 +59,8 @@ export const metadata: Metadata = {
     'Security Solutions',
     'Performance Optimization',
   ],
+  /** `robots` already configured globally through robots.ts */
+  robots: undefined,
   ...getMetadataFromAbout(textAbout),
   openGraph: {
     type: 'website',
