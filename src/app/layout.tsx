@@ -79,6 +79,7 @@ export const metadata: Metadata = {
     { name: 'Arthur Ginzburg', url: 'https://ginzburg.art' },
     { name: 'Gabriel', url: 'https://jj-dsgn.com' },
   ],
+  publisher: 'Art Ginzburg',
   creator: 'Art Ginzburg',
   category: 'Web Studio',
 };
