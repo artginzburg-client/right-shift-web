@@ -3,6 +3,7 @@ import './globals.linaria.global';
 import localFont from 'next/font/local';
 import { Attribution } from './components/Attribution';
 import { sheetConfig } from './utils/getSheet';
+import { textAbout } from './config/texts';
 
 const { CANONICAL_HOST } = process.env;
 const metadataBase = CANONICAL_HOST ? new URL(`https://${CANONICAL_HOST}`) : undefined;
@@ -24,6 +25,13 @@ const gTEestiProDisplay = localFont({
   ],
   style: 'swap',
 });
+
+/** @see https://gist.github.com/MicBrain/46a9723158307fd30db66a4b2af85411 — "The list of useful meta tags used in HTML5 documents" */
+function getMetadataFromAbout(
+  about: string,
+): Required<Pick<Metadata, 'abstract' | 'classification'>> {
+  return { abstract: about, classification: about };
+}
 
 export const metadata: Metadata = {
   metadataBase,
@@ -51,6 +59,7 @@ export const metadata: Metadata = {
     'Security Solutions',
     'Performance Optimization',
   ],
+  ...getMetadataFromAbout(textAbout),
   openGraph: {
     type: 'website',
     title: 'right.shift',
