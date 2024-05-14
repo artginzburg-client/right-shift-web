@@ -33,9 +33,13 @@ function getMetadataFromAbout(
   return { abstract: about, classification: about };
 }
 
+const brandName = 'right.shift';
+const slogan = 'all-in-one web development studio';
+const title = `${brandName} · ${slogan}`;
+
 export const metadata: Metadata = {
   metadataBase,
-  title: 'right.shift',
+  title,
   description: 'creating digital products tailored for you',
   keywords: [
     'Web Development',
@@ -64,7 +68,7 @@ export const metadata: Metadata = {
   ...getMetadataFromAbout(textAbout),
   openGraph: {
     type: 'website',
-    title: 'right.shift',
+    title,
     description: 'digital products tailored for you',
     url: metadataBase,
     siteName: 'right.shift',
