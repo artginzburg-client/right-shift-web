@@ -7,4 +7,6 @@ export const colors = {
     rgba(0, 255, 240, 1),
     rgba(5, 0, 255, 1)
   )`,
+  background: '#1e1e1e',
+  accent: '#151515',
 } as const;
