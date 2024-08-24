@@ -47,7 +47,7 @@ export function WorkSection() {
     <WorkSectionContainer>
       {works.map(({ imgSrc, aHref, title }) => (
         <WorkSectionImageContainer key={title} href={aHref} {...newTab}>
-          <WorkSectionImage src={imgSrc} alt={title} loading="lazy" />
+          <WorkSectionImage src={imgSrc} alt={title} loading="eager" placeholder="blur" />
           <WorkSectionNextIcon src={nextIconSrc} alt="Next" />
         </WorkSectionImageContainer>
       ))}
