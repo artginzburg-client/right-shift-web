@@ -1,10 +1,10 @@
 import { styled } from '@linaria/react';
+
 import {
   experimentalPreciseTypesetting,
   easings,
   sharedCircularButtonSubmittingEffect,
 } from '~/app/page.styled';
-
 import { mobileSafeHoverEffect } from '~/app/utils/mobileSafeHoverEffect';
 import { reset } from '~/app/utils/reset';
 

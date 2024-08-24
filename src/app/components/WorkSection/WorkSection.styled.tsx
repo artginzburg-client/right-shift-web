@@ -1,10 +1,9 @@
 import { styled } from '@linaria/react';
-
 import Image from 'next/image';
 import Link from 'next/link';
+
 import { easings } from '~/app/page.styled';
 import { navigationMenuContainerBorderRadius } from '~/app/components/NavigationMenu/NavigationMenu.styled';
-
 import { media } from '~/app/utils/media-queries';
 import { mobileSafeHoverEffect } from '~/app/utils/mobileSafeHoverEffect';
 

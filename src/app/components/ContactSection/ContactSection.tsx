@@ -1,21 +1,24 @@
 'use client';
 import { useRef, useState } from 'react';
+import { useEventListener } from 'usehooks-ts';
+
+import { useDelayedAutofocus } from '~/hooks/useDelayedAutofocus';
+import { usePreventClosingWindowWhileSending } from '~/hooks/usePreventClosingWindowWhileSending';
+import { fetchRoute } from '~/app/utils/fetchRoute';
+
+import { CircleButton } from '../ui/CircleButton/CircleButton';
+import { ArrowRightIcon } from '../ui/ArrowRightIcon';
 import {
   CalculatorSectionHeading,
   CalculatorSectionRegularText,
 } from '../CalculatorSection/CalculatorSection.styled';
+
 import {
   ContactSectionForm,
   ContactSectionInput,
   ContactSectionSendingInputContainer,
   ContactSectionTextarea,
 } from './ContactSection.styled';
-import { useEventListener } from 'usehooks-ts';
-import { useDelayedAutofocus } from '~/hooks/useDelayedAutofocus';
-import { usePreventClosingWindowWhileSending } from '~/hooks/usePreventClosingWindowWhileSending';
-import { CircleButton } from '../ui/CircleButton/CircleButton';
-import { ArrowRightIcon } from '../ui/ArrowRightIcon';
-import { fetchRoute } from '~/app/utils/fetchRoute';
 
 /** @todo Error Handling */
 export function ContactSection() {

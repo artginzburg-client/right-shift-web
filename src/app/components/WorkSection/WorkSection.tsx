@@ -1,16 +1,18 @@
 import { StaticImageData } from 'next/image';
-import {
-  WorkSectionContainer,
-  WorkSectionImage,
-  WorkSectionImageContainer,
-  WorkSectionNextIcon,
-} from './WorkSection.styled';
+
 import schoolMapImage from '~/images/work/school-map.png';
 import nfoTokenImage from '~/images/work/nfo-token.png';
 import kryshiIVysheImage from '~/images/work/kryshi-i-vyshe.png';
 import stackImage from '~/images/work/stack.png';
 import nextIconSrc from '~/images/next.svg';
 import { newTab } from '~/tools/linkHelpers';
+
+import {
+  WorkSectionContainer,
+  WorkSectionImage,
+  WorkSectionImageContainer,
+  WorkSectionNextIcon,
+} from './WorkSection.styled';
 
 export function WorkSection() {
   function generateWorksWithTypes<

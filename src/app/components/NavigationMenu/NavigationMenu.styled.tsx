@@ -1,5 +1,6 @@
 import { styled } from '@linaria/react';
 import { clampify } from 'css-clamper';
+
 import { reset, resetExtra } from '../../utils/reset';
 import { media } from '../../utils/media-queries';
 import { easings, experimentalPreciseTypesetting } from '../../page.styled';

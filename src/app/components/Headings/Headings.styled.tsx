@@ -1,4 +1,5 @@
 import { styled } from '@linaria/react';
+
 import { media } from '../../utils/media-queries';
 import { colors } from '../../config/colors';
 import { experimentalPreciseTypesetting, easings } from '../../page.styled';

@@ -1,12 +1,14 @@
 'use client';
 import { Fragment, forwardRef, useImperativeHandle, useState } from 'react';
-import {
-  CalculatorSectionDesiredOptionCheckbox,
-  CalculatorSectionDesiredOptionLabel,
-  CalculatorSectionDesiredOptions,
-  CalculatorSectionInput,
-  CalculatorSectionInputSendButton,
-} from './CalculatorSection.styled';
+
+import { usePreventClosingWindowWhileSending } from '~/hooks/usePreventClosingWindowWhileSending';
+import { fetchRoute } from '~/app/utils/fetchRoute';
+
+import { ArrowRightIcon } from '../ui/ArrowRightIcon';
+import { CircleButton } from '../ui/CircleButton/CircleButton';
+import { ArrowButton } from '../ui/ArrowButton/ArrowButton';
+import { ArrowButtonElementStickyOnSmallHeight } from '../ui/ArrowButton/ArrowButton.styled';
+
 import {
   CalculatorSectionArrowButtonsContainer,
   CalculatorSectionContainer,
@@ -16,12 +18,13 @@ import {
   CalculatorSectionSeparator,
   CircleButtonsContainer,
 } from './CalculatorSection.styled';
-import { usePreventClosingWindowWhileSending } from '~/hooks/usePreventClosingWindowWhileSending';
-import { ArrowRightIcon } from '../ui/ArrowRightIcon';
-import { CircleButton } from '../ui/CircleButton/CircleButton';
-import { ArrowButton } from '../ui/ArrowButton/ArrowButton';
-import { ArrowButtonElementStickyOnSmallHeight } from '../ui/ArrowButton/ArrowButton.styled';
-import { fetchRoute } from '~/app/utils/fetchRoute';
+import {
+  CalculatorSectionDesiredOptionCheckbox,
+  CalculatorSectionDesiredOptionLabel,
+  CalculatorSectionDesiredOptions,
+  CalculatorSectionInput,
+  CalculatorSectionInputSendButton,
+} from './CalculatorSection.styled';
 
 export interface CalculatorSectionImperativeMethods {
   /** @returns whether to prevent closing the NavigationMenu. */
@@ -31,7 +34,7 @@ export interface CalculatorSectionImperativeMethods {
  * @todo don't rerender on send — or in simple words, just don't clear the email in case the request fails and the user has to send again.
  * @todo Error Handling
  */
-export const CalculatorSection = forwardRef<CalculatorSectionImperativeMethods>((props, ref) => {
+export const CalculatorSection = forwardRef<CalculatorSectionImperativeMethods>((_props, ref) => {
   const [calcStage, setCalcStage] = useState(0);
 
   const devOnlyDebuggers = {

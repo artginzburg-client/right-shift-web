@@ -1,4 +1,5 @@
 import { headers } from 'next/headers';
+
 import { navigationSections } from './config/navigationSections';
 
 import type { MetadataRoute } from 'next';

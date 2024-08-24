@@ -1,11 +1,14 @@
 'use client';
 import { useState } from 'react';
-import { Main } from '../page.styled';
-import { Headings } from './Headings/Headings';
-import { NavigationMenuComponent } from './NavigationMenu/NavigationMenu';
-import { NavigationSection, navigationSections } from '../config/navigationSections';
+
 import { useOnMounted } from '~/hooks/useOnMounted';
 import { ReactStateSetter } from '~/tools/reactTypeHelpers';
+
+import { Main } from '../page.styled';
+import { NavigationSection, navigationSections } from '../config/navigationSections';
+
+import { Headings } from './Headings/Headings';
+import { NavigationMenuComponent } from './NavigationMenu/NavigationMenu';
 
 export function HomeClient({
   navigationMenuLinksElement,

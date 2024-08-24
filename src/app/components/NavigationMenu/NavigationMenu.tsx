@@ -1,17 +1,14 @@
 'use client';
 import { useRef, useState } from 'react';
-import {
-  NavigationMenuComponentContainer,
-  NavigationMenuContainer,
-  NavigationMenuNav,
-  NavigationMenuOuterContainer,
-  NavigationMenuPrimaryButton,
-} from './NavigationMenu.styled';
 import Link from 'next/link';
+import { useEventListener } from 'usehooks-ts';
+import gsap from 'gsap';
+
 import BurgerIcon from '~/images/burger';
 import BackIcon from '~/images/back';
-import { useEventListener } from 'usehooks-ts';
 import { ReactStateRecord, ReactStateSetter } from '~/tools/reactTypeHelpers';
+import { getIsTouchScreenDevice } from '~/tools/isTouchScreenDevice';
+
 import { AboutSection } from '../AboutSection';
 import { ContactSection } from '../ContactSection/ContactSection';
 import { WorkSection } from '../WorkSection/WorkSection';
@@ -19,10 +16,15 @@ import {
   CalculatorSectionImperativeMethods,
   CalculatorSection,
 } from '../CalculatorSection/CalculatorSection';
-import { buildCssTransform } from '~/tools/buildCssTransform';
-import { getIsTouchScreenDevice } from '~/tools/isTouchScreenDevice';
 import { NavigationSection, navigationSections } from '../../config/navigationSections';
-import gsap from 'gsap';
+
+import {
+  NavigationMenuComponentContainer,
+  NavigationMenuContainer,
+  NavigationMenuNav,
+  NavigationMenuOuterContainer,
+  NavigationMenuPrimaryButton,
+} from './NavigationMenu.styled';
 
 const navigationMenuId = 'primary-navigation';
 export function NavigationMenuComponent({

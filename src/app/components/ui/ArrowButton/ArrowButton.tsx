@@ -1,5 +1,6 @@
-import { ArrowButtonElement } from './ArrowButton.styled';
 import { ArrowRightIcon } from '../ArrowRightIcon';
+
+import { ArrowButtonElement } from './ArrowButton.styled';
 
 export function ArrowButton({
   children,

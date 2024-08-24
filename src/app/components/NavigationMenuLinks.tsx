@@ -1,6 +1,10 @@
 import { FaInstagram, FaLinkedinIn, FaTelegram } from 'react-icons/fa';
 import Link from 'next/link';
-import type { IconType } from 'react-icons/lib';
+
+
+
+import { linkBuilders, newTab } from '~/tools/linkHelpers';
+import { getSheet, type ContentSheetParsed } from '~/app/utils/getSheet';
 
 import {
   NavigationMenuContactList,
@@ -8,8 +12,7 @@ import {
   NavigationMenuSocialList,
 } from './NavigationMenu/NavigationMenu.styled';
 
-import { linkBuilders, newTab } from '~/tools/linkHelpers';
-import { getSheet, type ContentSheetParsed } from '~/app/utils/getSheet';
+import type { IconType } from 'react-icons/lib';
 
 const { CONTENT_SHEET_ID } = process.env;
 

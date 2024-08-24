@@ -1,4 +1,5 @@
 import { css } from '@linaria/core';
+
 import { media } from './utils/media-queries';
 
 export const globals = css`

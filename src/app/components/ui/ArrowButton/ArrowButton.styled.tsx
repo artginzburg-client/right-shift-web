@@ -1,7 +1,7 @@
 import { styled } from '@linaria/react';
+
 import { experimentalPreciseTypesetting, easings } from '~/app/page.styled';
 import { navigationMenuContainerPaddingInCalc } from '~/app/components/NavigationMenu/NavigationMenu.styled';
-
 import { media } from '~/app/utils/media-queries';
 import { reset } from '~/app/utils/reset';
 

@@ -1,5 +1,9 @@
 'use client';
 import { useState } from 'react';
+import { useEventListener } from 'usehooks-ts';
+
+import { NavigationSection } from '../../config/navigationSections';
+
 import {
   Heading1,
   HeadingsContainer,
@@ -7,8 +11,6 @@ import {
   Subheading,
   SubheadingSpan,
 } from './Headings.styled';
-import { useEventListener } from 'usehooks-ts';
-import { NavigationSection } from '../../config/navigationSections';
 
 export function Headings({
   isMenuOpened,

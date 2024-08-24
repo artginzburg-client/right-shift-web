@@ -1,9 +1,11 @@
-import type { Metadata } from 'next';
 import './globals.linaria.global';
 import localFont from 'next/font/local';
+
 import { Attribution } from './components/Attribution';
 import { sheetConfig } from './utils/getSheet';
 import { textAbout } from './config/texts';
+
+import type { Metadata } from 'next';
 
 const { CANONICAL_HOST } = process.env;
 const metadataBase = CANONICAL_HOST ? new URL(`https://${CANONICAL_HOST}`) : undefined;
