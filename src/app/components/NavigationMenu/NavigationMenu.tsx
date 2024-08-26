@@ -261,13 +261,15 @@ function NavigationMenu({
       const absoluteDistanceFromCenter =
         Math.abs(mousePositionFromCenter.x) + Math.abs(mousePositionFromCenter.y);
 
+      const translationMultiplierToCompensateRotation = 4;
+
       timeline.to(element, {
-        duration: 4 + absoluteDistanceFromCenter * 0.01,
-        rotationX: `${mousePositionFromCenter.y / delta}deg`,
-        rotationY: `${-mousePositionFromCenter.x / delta}deg`,
-        x: `${(-mousePositionFromCenter.x / delta) * 4}px`,
-        y: `${(-mousePositionFromCenter.y / delta) * 4}px`,
-        rotationZ: `${mousePositionFromCenter.x / delta / 2}deg`,
+        duration: 0.5 + absoluteDistanceFromCenter * 0.01,
+        rotationX: `${(mousePositionFromCenter.y / delta) * -1 * 2}deg`,
+        rotationY: `${mousePositionFromCenter.x / delta}deg`,
+        x: `${((-mousePositionFromCenter.x / delta) * translationMultiplierToCompensateRotation) / 1.34}px`,
+        y: `${(-mousePositionFromCenter.y / delta) * translationMultiplierToCompensateRotation}px`,
+        rotationZ: `${mousePositionFromCenter.x / delta / -2}deg`,
 
         ease: 'power3',
       });
