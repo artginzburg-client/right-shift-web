@@ -1,5 +1,9 @@
 import { StaticImageData } from 'next/image';
 
+import prime2uImage from '~/images/work/prime2u.png';
+import jenteleyImage from '~/images/work/jenteley.png';
+import primediamondsImage from '~/images/work/primediamonds.png';
+import sdmlpImage from '~/images/work/sdm-lp.png';
 import schoolMapImage from '~/images/work/school-map.png';
 import nfoTokenImage from '~/images/work/nfo-token.png';
 import kryshiIVysheImage from '~/images/work/kryshi-i-vyshe.png';
@@ -22,6 +26,16 @@ export function WorkSection() {
   }
   const works = generateWorksWithTypes([
     {
+      imgSrc: prime2uImage,
+      aHref: 'https://prime2u.ru',
+      title: 'Prime 2U',
+    },
+    {
+      imgSrc: jenteleyImage,
+      aHref: 'https://jenteley.ru',
+      title: 'Enteley Jewelry',
+    },
+    {
       imgSrc: nfoTokenImage,
       aHref: 'https://nfotoken.com',
       title: 'NFO Token',
@@ -40,6 +54,16 @@ export function WorkSection() {
       imgSrc: kryshiIVysheImage,
       aHref: 'https://concerts.kryshi-i-vyshe.ru',
       title: 'Kryshe i Vyshe',
+    },
+    {
+      imgSrc: primediamondsImage,
+      aHref: 'https://primediamonds.ru',
+      title: 'Prime Diamonds',
+    },
+    {
+      imgSrc: sdmlpImage,
+      aHref: 'https://sdm-lp.ru',
+      title: 'СДМ-ЛП',
     },
   ] as const);
 

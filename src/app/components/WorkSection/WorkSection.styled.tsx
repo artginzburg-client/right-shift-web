@@ -81,8 +81,10 @@ export const WorkSectionImageContainer = styled(Link)`
 export const WorkSectionImage = styled(Image)`
   width: 100%;
   height: 100%;
+  aspect-ratio: 16 / 9;
 
   object-fit: cover;
+  object-position: top;
 
   border-radius: inherit;
 
