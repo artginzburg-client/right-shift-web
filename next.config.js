@@ -7,7 +7,9 @@ const nextConfig = {
   images: { unoptimized: true },
   experimental: {
     webpackBuildWorker: true,
-    typedRoutes: true
+    // typedRoutes is off: the API routes were moved to private folders for the
+    // static snapshot, so generated route types no longer cover the form calls.
+    typedRoutes: false
   }
 }
 
